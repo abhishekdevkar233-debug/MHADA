@@ -1,0 +1,60 @@
+@import "tailwindcss";
+
+:root {
+  --ink: #16231c;
+  --canvas: #f6f5f0;
+  --surface: #ffffff;
+  --primary: #0f5c4c;
+  --primary-dark: #0a4436;
+  --primary-tint: #e7f0ec;
+  --accent: #e2703a;
+  --accent-tint: #fbe7db;
+  --accent-dark: #b4531f;
+  --border: #e4e1d6;
+  --border-soft: #eeebe1;
+  --muted: #5f665a;
+  --muted-2: #8a9083;
+  --danger: #b23a3a;
+  --success: #1f6e43;
+}
+
+@theme inline {
+  --color-ink: var(--ink);
+  --color-canvas: var(--canvas);
+  --color-surface: var(--surface);
+  --color-primary: var(--primary);
+  --color-primary-dark: var(--primary-dark);
+  --color-primary-tint: var(--primary-tint);
+  --color-accent: var(--accent);
+  --color-accent-tint: var(--accent-tint);
+  --color-accent-dark: var(--accent-dark);
+  --color-border: var(--border);
+  --color-border-soft: var(--border-soft);
+  --color-muted: var(--muted);
+  --color-muted-2: var(--muted-2);
+  --color-danger: var(--danger);
+  --color-success: var(--success);
+  --font-sans: var(--font-inter);
+  --font-display: var(--font-poppins);
+  --font-mono: var(--font-plex-mono);
+  --font-devanagari: var(--font-devanagari);
+}
+
+.dv {
+  font-family: var(--font-devanagari), var(--font-inter), sans-serif;
+}
+
+.disp {
+  font-family: var(--font-display), var(--font-inter), sans-serif;
+  letter-spacing: -0.01em;
+}
+
+::selection {
+  background: var(--accent-tint);
+  color: var(--accent-dark);
+}
+
+*:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
