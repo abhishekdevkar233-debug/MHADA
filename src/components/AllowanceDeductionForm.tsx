@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Icon from "@/components/Icon";
 import PageHeader from "@/components/PageHeader";
 import { DateField, Toast } from "@/components/form/Field";
@@ -122,10 +122,10 @@ export default function AllowanceDeductionForm({
   };
 
   const totalAmount = cards.reduce((sum, c) => sum + cardAmount(c), 0);
-  const earliestEffective = cards
-    .map((c) => c.effectiveFrom)
-    .filter(Boolean)
-    .sort()[0];
+  const amountTrend = cards.map(cardAmount);
+  const effectiveDates = cards.map((c) => c.effectiveFrom).filter(Boolean).sort();
+  const earliestEffective = effectiveDates[0];
+  const hasMultipleEffectiveDates = new Set(effectiveDates).size > 1;
 
   /* ---------------- History table ---------------- */
   const [search, setSearch] = useState("");
@@ -308,9 +308,24 @@ export default function AllowanceDeductionForm({
 
         {/* Summary */}
         <div className="mb-5 grid grid-cols-1 gap-3 sm:grid-cols-3">
-          <SummaryCard label={`Total ${mode} Amount`} value={`₹${Math.round(totalAmount).toLocaleString("en-IN")}`} icon="money" />
-          <SummaryCard label={`Total ${plural} Added`} value={String(cards.length)} icon={mode === "Allowance" ? "allowance" : "deduction"} />
-          <SummaryCard label="Effective From Date" value={earliestEffective ?? "—"} icon="attendance" />
+          <AmountKpiCard
+            label={`Total ${mode} Amount`}
+            amount={totalAmount}
+            trend={amountTrend}
+            chip="chip-1"
+          />
+          <CountKpiCard
+            label={`Total ${plural} Added`}
+            count={cards.length}
+            subtitle={`${plural} entries configured`}
+            icon={mode === "Allowance" ? "allowance" : "deduction"}
+            chip="chip-2"
+          />
+          <EffectiveDateKpiCard
+            date={earliestEffective}
+            multiple={hasMultipleEffectiveDates}
+            chip="chip-3"
+          />
         </div>
 
         {/* Actions */}
@@ -491,17 +506,223 @@ function ReadOnlyStat({ label, value }: { label: string; value: string }) {
   );
 }
 
-function SummaryCard({ label, value, icon }: { label: string; value: string; icon: string }) {
+/* ---------------- Allowance Details KPI cards ---------------- */
+
+type ChipTone = "chip-1" | "chip-2" | "chip-3" | "chip-4";
+
+const CHIP_CLS: Record<ChipTone, { text: string; bg: string; iconBg: string; border: string }> = {
+  "chip-1": { text: "text-chip-1", bg: "bg-chip-1-tint", iconBg: "from-chip-1 to-chip-1/70", border: "bg-chip-1" },
+  "chip-2": { text: "text-chip-2", bg: "bg-chip-2-tint", iconBg: "from-chip-2 to-chip-2/70", border: "bg-chip-2" },
+  "chip-3": { text: "text-chip-3", bg: "bg-chip-3-tint", iconBg: "from-chip-3 to-chip-3/70", border: "bg-chip-3" },
+  "chip-4": { text: "text-chip-4", bg: "bg-chip-4-tint", iconBg: "from-chip-4 to-chip-4/70", border: "bg-chip-4" },
+};
+
+/** Animates a numeric value toward `target` whenever it changes. */
+function useCountUp(target: number, duration = 500) {
+  const [value, setValue] = useState(target);
+  const prevTarget = useRef(target);
+  useEffect(() => {
+    const from = prevTarget.current;
+    prevTarget.current = target;
+    if (from === target) return;
+    const steps = 20;
+    const stepMs = duration / steps;
+    let step = 0;
+    const id = setInterval(() => {
+      step += 1;
+      const progress = Math.min(1, step / steps);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      setValue(from + (target - from) * eased);
+      if (progress >= 1) clearInterval(id);
+    }, stepMs);
+    return () => clearInterval(id);
+  }, [target, duration]);
+  return value;
+}
+
+/** Brief expanding-circle click feedback, themed via the card's chip color. */
+function useRipple() {
+  const [ripples, setRipples] = useState<{ id: number; x: number; y: number }[]>([]);
+  function onClick(e: React.MouseEvent<HTMLDivElement>) {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const id = Date.now();
+    setRipples((prev) => [...prev, { id, x: e.clientX - rect.left, y: e.clientY - rect.top }]);
+    setTimeout(() => setRipples((prev) => prev.filter((r) => r.id !== id)), 500);
+  }
+  return { ripples, onClick };
+}
+
+function RippleLayer({ ripples, color }: { ripples: { id: number; x: number; y: number }[]; color: string }) {
   return (
-    <div className="flex items-center gap-3 rounded-xl border border-border bg-surface px-4 py-3.5">
-      <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-primary-tint text-primary">
+    <>
+      {ripples.map((r) => (
+        <span
+          key={r.id}
+          className="pointer-events-none absolute h-3 w-3 -translate-x-1/2 -translate-y-1/2 animate-[kpi-ripple_500ms_ease-out]"
+          style={{ left: r.x, top: r.y, backgroundColor: color, borderRadius: "9999px" }}
+        />
+      ))}
+    </>
+  );
+}
+
+function KpiShell({
+  chip,
+  icon,
+  iconAnimation = "group-hover:rotate-6",
+  children,
+}: {
+  chip: ChipTone;
+  icon: string;
+  iconAnimation?: string;
+  children: React.ReactNode;
+}) {
+  const cls = CHIP_CLS[chip];
+  const { ripples, onClick } = useRipple();
+  return (
+    <div
+      onClick={onClick}
+      className={`group relative flex cursor-default items-start gap-3.5 overflow-hidden rounded-xl border border-border ${cls.bg} px-4 py-4 shadow-[0_1px_2px_rgba(22,35,28,0.04)] transition-all duration-250 ease-out hover:-translate-y-0.5 hover:scale-[1.02] hover:shadow-[0_12px_28px_-10px_rgba(22,35,28,0.22)]`}
+    >
+      <span className={`absolute inset-x-0 top-0 h-[3px] ${cls.border}`} aria-hidden="true" />
+      <RippleLayer ripples={ripples} color="rgba(255,255,255,0.6)" />
+      <span
+        className={`relative flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br ${cls.iconBg} text-white shadow-[0_6px_14px_-4px_rgba(0,0,0,0.35)] transition-transform duration-300 ${iconAnimation}`}
+      >
         <Icon name={icon} className="h-5 w-5" />
       </span>
-      <div>
-        <div className="disp text-[19px] leading-none font-semibold text-ink">{value}</div>
-        <div className="mt-1 text-[11.5px] font-medium text-muted">{label}</div>
-      </div>
+      <div className="min-w-0 flex-1">{children}</div>
     </div>
+  );
+}
+
+function AmountKpiCard({ label, amount, trend, chip }: { label: string; amount: number; trend: number[]; chip: ChipTone }) {
+  const animated = useCountUp(amount);
+  const cls = CHIP_CLS[chip];
+
+  const points = trend.length >= 2 ? trend : trend.length === 1 ? [0, trend[0]] : [0, 0];
+  const max = Math.max(...points, 1);
+  const min = Math.min(...points, 0);
+  const range = max - min || 1;
+  const path = points
+    .map((v, i) => {
+      const x = (i / (points.length - 1)) * 60;
+      const y = 20 - ((v - min) / range) * 18;
+      return `${i === 0 ? "M" : "L"} ${x} ${y}`;
+    })
+    .join(" ");
+
+  return (
+    <KpiShell chip={chip} icon="money">
+      <div className={`disp text-[21px] leading-tight font-bold text-ink transition-colors`}>
+        ₹{Math.round(animated).toLocaleString("en-IN")}
+      </div>
+      <div className="mt-0.5 text-[11.5px] font-semibold text-ink/70">{label}</div>
+      <div className="mt-1 flex items-center justify-between gap-2">
+        <span className="text-[10.5px] text-muted">Across all active allowances</span>
+        {trend.length > 0 && (
+          <svg viewBox="0 0 60 20" className={`h-4 w-12 flex-shrink-0 ${cls.text}`} preserveAspectRatio="none">
+            <path d={path} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        )}
+      </div>
+    </KpiShell>
+  );
+}
+
+function CountKpiCard({
+  label,
+  count,
+  subtitle,
+  icon,
+  chip,
+}: {
+  label: string;
+  count: number;
+  subtitle: string;
+  icon: string;
+  chip: ChipTone;
+}) {
+  const animated = useCountUp(count);
+  const cls = CHIP_CLS[chip];
+  const target = 8;
+  const pct = Math.min(1, count / target);
+  const circumference = 2 * Math.PI * 9;
+
+  return (
+    <KpiShell chip={chip} icon={icon} iconAnimation="group-hover:animate-[kpi-pulse_600ms_ease-in-out]">
+      <div className="flex items-start justify-between gap-2">
+        <div>
+          <div className="disp text-[21px] leading-tight font-bold text-ink">{Math.round(animated)}</div>
+          <div className="mt-0.5 text-[11.5px] font-semibold text-ink/70">{label}</div>
+          <div className="mt-1 text-[10.5px] text-muted">{subtitle}</div>
+        </div>
+        <svg viewBox="0 0 24 24" className={`h-6 w-6 flex-shrink-0 -rotate-90 ${cls.text}`}>
+          <circle cx="12" cy="12" r="9" fill="none" stroke="var(--border-soft)" strokeWidth="3" />
+          <circle
+            cx="12"
+            cy="12"
+            r="9"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="3"
+            strokeLinecap="round"
+            strokeDasharray={circumference}
+            strokeDashoffset={circumference * (1 - pct)}
+            className="transition-all duration-700 ease-out"
+          />
+        </svg>
+      </div>
+    </KpiShell>
+  );
+}
+
+function relativeDateLabel(iso: string): string {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const [y, m, d] = iso.split("-").map(Number);
+  const target = new Date(y, m - 1, d);
+  const diffDays = Math.round((target.getTime() - today.getTime()) / 86400000);
+  if (diffDays === 0) return "Starts Today";
+  if (diffDays > 0) return `Starts in ${diffDays} Day${diffDays === 1 ? "" : "s"}`;
+  return `Active Since ${Math.abs(diffDays)} Day${Math.abs(diffDays) === 1 ? "" : "s"}`;
+}
+
+function formatDisplayDate(iso: string): string {
+  const [y, m, d] = iso.split("-").map(Number);
+  const date = new Date(y, m - 1, d);
+  return date.toLocaleDateString("en-IN", { day: "2-digit", month: "long", year: "numeric" });
+}
+
+function EffectiveDateKpiCard({ date, multiple, chip }: { date: string | undefined; multiple: boolean; chip: ChipTone }) {
+  return (
+    <KpiShell chip={chip} icon="leave-balance">
+      {date ? (
+        <>
+          <div className="disp text-[17px] leading-tight font-bold text-ink">{formatDisplayDate(date)}</div>
+          <div className="mt-0.5 flex items-center gap-1.5 text-[11.5px] font-semibold text-ink/70">
+            {multiple ? (
+              <span className="group/tt relative inline-flex items-center gap-1">
+                Earliest Effective Date
+                <Icon name="help" className="h-3 w-3 text-muted-2" />
+                <span className="pointer-events-none absolute bottom-full left-0 mb-1.5 w-max max-w-[200px] rounded-[7px] bg-ink px-2.5 py-1.5 text-[10.5px] font-normal text-white opacity-0 shadow-lg transition-opacity duration-150 group-hover/tt:opacity-100">
+                  The selected allowances have different effective dates — this is the earliest one.
+                </span>
+              </span>
+            ) : (
+              "Effective From Date"
+            )}
+          </div>
+          <div className="mt-1 text-[10.5px] text-muted">{relativeDateLabel(date)}</div>
+        </>
+      ) : (
+        <>
+          <div className="disp text-[17px] leading-tight font-bold text-muted-2">—</div>
+          <div className="mt-0.5 text-[11.5px] font-semibold text-ink/70">Effective From Date</div>
+          <div className="mt-1 text-[10.5px] text-muted">No allowances added yet</div>
+        </>
+      )}
+    </KpiShell>
   );
 }
 

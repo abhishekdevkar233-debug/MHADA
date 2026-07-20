@@ -26,6 +26,21 @@
   --success-tint: #e5f0e9;
   --warning: #a66a1e;
   --warning-tint: #f6ecdd;
+
+  /*
+   * Rotating accent "chips" for widgets that want more than one accent
+   * color (KPI cards, mini charts). Non-multicolor themes just reuse the
+   * existing palette so they stay restrained; Theme 03 Multi-Color below
+   * is the only one that gives these their own distinct hues.
+   */
+  --chip-1: var(--accent);
+  --chip-1-tint: var(--accent-tint);
+  --chip-2: var(--success);
+  --chip-2-tint: var(--success-tint);
+  --chip-3: var(--warning);
+  --chip-3-tint: var(--warning-tint);
+  --chip-4: var(--primary-dark);
+  --chip-4-tint: var(--primary-tint);
 }
 
 /* Theme 02 — Purple: soft purple primary, lavender accents, pastel surfaces. */
@@ -41,17 +56,31 @@
   --border-soft: #ece6f6;
 }
 
-/* Theme 03 — Maroon: elegant maroon primary, soft rose accents, warm neutrals. */
-:root[data-theme="maroon"] {
-  --canvas: #f9f5f4;
-  --primary: #7a2635;
-  --primary-dark: #591a26;
-  --primary-tint: #f5e6e8;
-  --accent: #a8455a;
-  --accent-tint: #f7ebee;
-  --accent-dark: #6e2536;
-  --border: #ecdcdd;
-  --border-soft: #f2e8e8;
+/*
+ * Theme 03 — Multi-Color: premium government-dashboard palette. Purple is
+ * the primary brand color; blue/teal/orange/maroon rotate as accent chips
+ * on widgets that call for it (KPI cards, mini charts) rather than being
+ * splashed across large surfaces — big areas stay pastel/white.
+ */
+:root[data-theme="multicolor"] {
+  --canvas: #f8f7fc;
+  --primary: #5b4bdb;
+  --primary-dark: #4536ab;
+  --primary-tint: #ede9fe;
+  --accent: #3a7bd5;
+  --accent-tint: #eaf4ff;
+  --accent-dark: #2c5fa8;
+  --border: #e5e1f7;
+  --border-soft: #eeecfa;
+
+  --chip-1: #3a7bd5;
+  --chip-1-tint: #eaf4ff;
+  --chip-2: #14b8a6;
+  --chip-2-tint: #dff8f5;
+  --chip-3: #f97316;
+  --chip-3-tint: #fff3e8;
+  --chip-4: #c85a5a;
+  --chip-4-tint: #fbeaea;
 }
 
 /* Theme 04 — Fresh Cold: slate/teal primary, powder-blue accents, ice-gray surfaces. */
@@ -86,6 +115,14 @@
   --color-success-tint: var(--success-tint);
   --color-warning: var(--warning);
   --color-warning-tint: var(--warning-tint);
+  --color-chip-1: var(--chip-1);
+  --color-chip-1-tint: var(--chip-1-tint);
+  --color-chip-2: var(--chip-2);
+  --color-chip-2-tint: var(--chip-2-tint);
+  --color-chip-3: var(--chip-3);
+  --color-chip-3-tint: var(--chip-3-tint);
+  --color-chip-4: var(--chip-4);
+  --color-chip-4-tint: var(--chip-4-tint);
   --font-sans: var(--font-inter);
   --font-display: var(--font-poppins);
   --font-mono: var(--font-plex-mono);
@@ -124,6 +161,27 @@
 
 .animate-fade-in-up {
   animation: fade-in-up 0.4s ease-out both;
+}
+
+@keyframes kpi-ripple {
+  from {
+    opacity: 0.5;
+    transform: translate(-50%, -50%) scale(0);
+  }
+  to {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(18);
+  }
+}
+
+@keyframes kpi-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.12);
+  }
 }
 
 /*

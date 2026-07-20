@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useEffect, useState } from "react";
 
-export type ThemeId = "blue" | "purple" | "maroon" | "cold";
+export type ThemeId = "blue" | "purple" | "multicolor" | "cold";
 
 export type ThemeMeta = {
   id: ThemeId;
@@ -15,7 +15,7 @@ export type ThemeMeta = {
 export const THEMES: ThemeMeta[] = [
   { id: "blue", label: "Theme 01 · Blue (Default)", attr: null, swatches: ["#14487a", "#2e6da4", "#e6edf6"] },
   { id: "purple", label: "Theme 02 · Purple", attr: "purple", swatches: ["#6b4fa0", "#8a6fc2", "#efe9f8"] },
-  { id: "maroon", label: "Theme 03 · Maroon", attr: "maroon", swatches: ["#7a2635", "#a8455a", "#f5e6e8"] },
+  { id: "multicolor", label: "Theme 03 · Multi-Color", attr: "multicolor", swatches: ["#5b4bdb", "#14b8a6", "#f97316"] },
   { id: "cold", label: "Theme 04 · Fresh Cold", attr: "cold", swatches: ["#3d6e78", "#5b8a9a", "#e3f1ef"] },
 ];
 
