@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useRef, useState } from "react";
+import CircularProgress from "@mui/material/CircularProgress";
 import Icon from "@/components/Icon";
 import PageHeader from "@/components/PageHeader";
 import { Toast } from "@/components/form/Field";
@@ -188,10 +189,7 @@ export default function BillProcessing() {
       {stage === "processing" && (
         <div className="mb-5 rounded-xl border border-border bg-surface p-8 text-center shadow-[0_1px_2px_rgba(22,35,28,0.04)]">
           <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-primary-tint">
-            <svg className="h-6 w-6 animate-spin text-primary" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="2.5" strokeOpacity="0.25" />
-              <path d="M21 12a9 9 0 00-9-9" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
-            </svg>
+            <CircularProgress size={24} thickness={4.5} sx={{ color: "var(--primary)" }} />
           </div>
           <h2 className="disp mt-4 text-[16px] font-semibold text-ink">Processing Payroll…</h2>
           <div className="mx-auto mt-5 max-w-sm space-y-2.5 text-left">
@@ -200,10 +198,7 @@ export default function BillProcessing() {
                 {i < stepIndex ? (
                   <Icon name="attendance" className="h-4 w-4 flex-shrink-0 text-success" />
                 ) : i === stepIndex ? (
-                  <svg className="h-4 w-4 flex-shrink-0 animate-spin text-primary" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                    <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="2.5" strokeOpacity="0.25" />
-                    <path d="M21 12a9 9 0 00-9-9" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
-                  </svg>
+                  <CircularProgress size={16} thickness={5} sx={{ color: "var(--primary)", flexShrink: 0 }} />
                 ) : (
                   <span className="h-4 w-4 flex-shrink-0 rounded-full border-[1.5px] border-border" />
                 )}

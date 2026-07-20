@@ -3,62 +3,8 @@
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useId, useRef, useState } from "react";
-
-function EyeIcon({ off }: { off: boolean }) {
-  if (off) {
-    return (
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-        <path
-          d="M3 3l18 18M10.6 10.6a2.5 2.5 0 003.4 3.4M9.4 5.4A10.9 10.9 0 0112 5c5.5 0 9.5 4 11 7-.6 1.2-1.6 2.6-3 3.9M6.5 6.7C4.5 8 3 9.9 2 11c1.5 3 5.5 7 10 7 1.2 0 2.4-.3 3.5-.7"
-          stroke="currentColor"
-          strokeWidth="1.8"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-      </svg>
-    );
-  }
-  return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path
-        d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7-10-7-10-7z"
-        stroke="currentColor"
-        strokeWidth="1.8"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <circle cx="12" cy="12" r="3" stroke="currentColor" strokeWidth="1.8" />
-    </svg>
-  );
-}
-
-function Spinner() {
-  return (
-    <svg
-      className="animate-spin"
-      width="16"
-      height="16"
-      viewBox="0 0 24 24"
-      fill="none"
-      aria-hidden="true"
-    >
-      <circle
-        cx="12"
-        cy="12"
-        r="9"
-        stroke="currentColor"
-        strokeWidth="2.5"
-        strokeOpacity="0.3"
-      />
-      <path
-        d="M21 12a9 9 0 00-9-9"
-        stroke="currentColor"
-        strokeWidth="2.5"
-        strokeLinecap="round"
-      />
-    </svg>
-  );
-}
+import CircularProgress from "@mui/material/CircularProgress";
+import Icon from "@/components/Icon";
 
 type FieldErrors = { username?: string; password?: string };
 
@@ -208,7 +154,7 @@ export default function LoginPage() {
                   aria-pressed={showPassword}
                   className="absolute inset-y-0 right-0 flex w-10 items-center justify-center text-muted-2 transition-colors hover:text-ink"
                 >
-                  <EyeIcon off={showPassword} />
+                  <Icon name={showPassword ? "eye-off" : "eye"} className="h-[18px] w-[18px]" />
                 </button>
               </div>
               {errors.password && (
@@ -223,7 +169,7 @@ export default function LoginPage() {
               disabled={submitting}
               className="mt-1.5 flex w-full items-center justify-center gap-2 rounded-[9px] bg-primary px-5 py-[11px] text-[14px] font-semibold text-white transition-colors hover:bg-primary-dark disabled:cursor-not-allowed disabled:opacity-80"
             >
-              {submitting && <Spinner />}
+              {submitting && <CircularProgress size={16} thickness={5} sx={{ color: "inherit" }} />}
               {submitting ? "Signing in…" : "Log In"}
             </button>
           </form>

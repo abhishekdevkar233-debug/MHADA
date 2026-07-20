@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Poppins, Inter, IBM_Plex_Mono, Noto_Sans_Devanagari } from "next/font/google";
+import { StyledEngineProvider } from "@mui/material/styles";
 import { LangProvider } from "@/lib/i18n";
 import "./globals.css";
 
@@ -44,7 +45,15 @@ export default function RootLayout({
       className={`${poppins.variable} ${inter.variable} ${plexMono.variable} ${notoDevanagari.variable} h-full antialiased`}
     >
       <body className="h-full flex flex-col overflow-hidden bg-canvas font-sans text-ink">
-        <LangProvider>{children}</LangProvider>
+        {/*
+          injectFirst puts MUI's emotion-generated icon styles at the very
+          start of <head>, so Tailwind utility classes (rotate-90, hover:*,
+          etc.) — which load after — always win ties instead of being
+          silently overridden by MUI's own CSS.
+        */}
+        <StyledEngineProvider injectFirst>
+          <LangProvider>{children}</LangProvider>
+        </StyledEngineProvider>
       </body>
     </html>
   );

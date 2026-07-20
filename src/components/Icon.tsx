@@ -1,222 +1,133 @@
+import type { ComponentType } from "react";
+import type { SvgIconProps } from "@mui/material/SvgIcon";
+
+import DashboardOutlined from "@mui/icons-material/DashboardOutlined";
+import PersonOutlineOutlined from "@mui/icons-material/PersonOutlineOutlined";
+import EventAvailableOutlined from "@mui/icons-material/EventAvailableOutlined";
+import EventOutlined from "@mui/icons-material/EventOutlined";
+import RemoveCircleOutlineOutlined from "@mui/icons-material/RemoveCircleOutlineOutlined";
+import FactCheckOutlined from "@mui/icons-material/FactCheckOutlined";
+import SwapHorizOutlined from "@mui/icons-material/SwapHorizOutlined";
+import AddCircleOutlineOutlined from "@mui/icons-material/AddCircleOutlineOutlined";
+import RemoveOutlined from "@mui/icons-material/RemoveOutlined";
+import ReceiptLongOutlined from "@mui/icons-material/ReceiptLongOutlined";
+import TrendingUpOutlined from "@mui/icons-material/TrendingUpOutlined";
+import WorkspacePremiumOutlined from "@mui/icons-material/WorkspacePremiumOutlined";
+import NoteAddOutlined from "@mui/icons-material/NoteAddOutlined";
+import AutorenewOutlined from "@mui/icons-material/AutorenewOutlined";
+import BarChartOutlined from "@mui/icons-material/BarChartOutlined";
+import DescriptionOutlined from "@mui/icons-material/DescriptionOutlined";
+import PieChartOutlineOutlined from "@mui/icons-material/PieChartOutlineOutlined";
+import ElderlyOutlined from "@mui/icons-material/ElderlyOutlined";
+import CompareArrowsOutlined from "@mui/icons-material/CompareArrowsOutlined";
+import AccountCircleOutlined from "@mui/icons-material/AccountCircleOutlined";
+import SettingsOutlined from "@mui/icons-material/SettingsOutlined";
+import ShieldOutlined from "@mui/icons-material/ShieldOutlined";
+import TuneOutlined from "@mui/icons-material/TuneOutlined";
+import PrintOutlined from "@mui/icons-material/PrintOutlined";
+import PaymentsOutlined from "@mui/icons-material/PaymentsOutlined";
+import LogoutOutlined from "@mui/icons-material/LogoutOutlined";
+import VpnKeyOutlined from "@mui/icons-material/VpnKeyOutlined";
+import MenuOutlined from "@mui/icons-material/MenuOutlined";
+import CloseOutlined from "@mui/icons-material/CloseOutlined";
+import ChevronRightOutlined from "@mui/icons-material/ChevronRightOutlined";
+import SearchOutlined from "@mui/icons-material/SearchOutlined";
+import NotificationsOutlined from "@mui/icons-material/NotificationsOutlined";
+import HelpOutlineOutlined from "@mui/icons-material/HelpOutlineOutlined";
+import EditOutlined from "@mui/icons-material/EditOutlined";
+import VisibilityOutlined from "@mui/icons-material/VisibilityOutlined";
+import VisibilityOffOutlined from "@mui/icons-material/VisibilityOffOutlined";
+import KeyboardDoubleArrowLeftOutlined from "@mui/icons-material/KeyboardDoubleArrowLeftOutlined";
+import FilterListOutlined from "@mui/icons-material/FilterListOutlined";
+import CancelOutlined from "@mui/icons-material/CancelOutlined";
+
 type IconProps = {
   name: string;
   className?: string;
 };
 
 /**
- * Material Design Icons (outlined), sourced from @mui/icons-material glyph
- * data and rendered as lightweight inline SVGs so callers keep using
- * <Icon name className />
- * with no dependency on @mui/material at render time.
+ * One name -> one Material UI icon, used for that feature everywhere in the
+ * app (e.g. "attendance" is always FactCheckOutlined, never a mix of
+ * variants). @mui/icons-material is the only icon source; nothing here is a
+ * hand-drawn or AI-generated SVG.
  */
-const PATHS: Record<string, React.ReactNode> = {
-  "dashboard": (
-    <>
-      <path d="M19 5v2h-4V5zM9 5v6H5V5zm10 8v6h-4v-6zM9 17v2H5v-2zM21 3h-8v6h8zM11 3H3v10h8zm10 8h-8v10h8zm-10 4H3v6h8z" />
-    </>
-  ),
-  "employee": (
-    <>
-      <path d="M12 5.9c1.16 0 2.1.94 2.1 2.1s-.94 2.1-2.1 2.1S9.9 9.16 9.9 8s.94-2.1 2.1-2.1m0 9c2.97 0 6.1 1.46 6.1 2.1v1.1H5.9V17c0-.64 3.13-2.1 6.1-2.1M12 4C9.79 4 8 5.79 8 8s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4m0 9c-2.67 0-8 1.34-8 4v3h16v-3c0-2.66-5.33-4-8-4" />
-    </>
-  ),
-  "leave-balance": (
-    <>
-      <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2m0 16H5V9h14zM5 7V5h14v2zm5.56 10.46 5.93-5.93-1.06-1.06-4.87 4.87-2.11-2.11-1.06 1.06z" />
-    </>
-  ),
-  "leave-assign": (
-    <>
-      <path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2m0 16H5V10h14zm0-12H5V6h14zm-7 5h5v5h-5z" />
-    </>
-  ),
-  "special-deduction": (
-    <>
-      <path d="M7 11v2h10v-2zm5-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8" />
-    </>
-  ),
-  "attendance": (
-    <>
-      <path d="M20 3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2m0 16H4V5h16z" />
-      <path d="M19.41 10.42 17.99 9l-3.17 3.17-1.41-1.42L12 12.16 14.82 15zM5 7h5v2H5zm0 4h5v2H5zm0 4h5v2H5z" />
-    </>
-  ),
-  "pay-change": (
-    <>
-      <path d="M6.99 11 3 15l3.99 4v-3H14v-2H6.99zM21 9l-3.99-4v3H10v2h7.01v3z" />
-    </>
-  ),
-  "allowance": (
-    <>
-      <path d="M13 7h-2v4H7v2h4v4h2v-4h4v-2h-4zm-1-5C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8" />
-    </>
-  ),
-  "deduction": (
-    <>
-      <path d="M19 13H5v-2h14z" />
-    </>
-  ),
-  "income-tax": (
-    <>
-      <path d="M19.5 3.5 18 2l-1.5 1.5L15 2l-1.5 1.5L12 2l-1.5 1.5L9 2 7.5 3.5 6 2v14H3v3c0 1.66 1.34 3 3 3h12c1.66 0 3-1.34 3-3V2zM15 20H6c-.55 0-1-.45-1-1v-1h10zm4-1c0 .55-.45 1-1 1s-1-.45-1-1v-3H8V5h11z" />
-      <path d="M9 7h6v2H9zm7 0h2v2h-2zm-7 3h6v2H9zm7 0h2v2h-2z" />
-    </>
-  ),
-  "da-arrears": (
-    <>
-      <path d="m16 6 2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z" />
-    </>
-  ),
-  "seventh-pay": (
-    <>
-      <path d="M9.68 13.69 12 11.93l2.31 1.76-.88-2.85L15.75 9h-2.84L12 6.19 11.09 9H8.25l2.31 1.84zM20 10c0-4.42-3.58-8-8-8s-8 3.58-8 8c0 2.03.76 3.87 2 5.28V23l6-2 6 2v-7.72c1.24-1.41 2-3.25 2-5.28m-8-6c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6 2.69-6 6-6m0 15-4 1.02v-3.1c1.18.68 2.54 1.08 4 1.08s2.82-.4 4-1.08v3.1z" />
-    </>
-  ),
-  "bill-create": (
-    <>
-      <path d="M13 11h-2v3H8v2h3v3h2v-3h3v-2h-3zm1-9H6c-1.1 0-2 .9-2 2v16c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8zm4 18H6V4h7v5h5z" />
-    </>
-  ),
-  "bill-process": (
-    <>
-      <path d="M12 6v3l4-4-4-4v3c-4.42 0-8 3.58-8 8 0 1.57.46 3.03 1.24 4.26L6.7 14.8c-.45-.83-.7-1.79-.7-2.8 0-3.31 2.69-6 6-6m6.76 1.74L17.3 9.2c.44.84.7 1.79.7 2.8 0 3.31-2.69 6-6 6v-3l-4 4 4 4v-3c4.42 0 8-3.58 8-8 0-1.57-.46-3.03-1.24-4.26" />
-    </>
-  ),
-  "bill-report": (
-    <>
-      <path d="M4 9h4v11H4zm12 4h4v7h-4zm-6-9h4v16h-4z" />
-    </>
-  ),
-  "salary-slip": (
-    <>
-      <path d="M8 16h8v2H8zm0-4h8v2H8zm6-10H6c-1.1 0-2 .9-2 2v16c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8zm4 18H6V4h7v5h5z" />
-    </>
-  ),
-  "deduction-report": (
-    <>
-      <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2m1 2.07c3.61.45 6.48 3.33 6.93 6.93H13zM4 12c0-4.06 3.07-7.44 7-7.93v15.87c-3.93-.5-7-3.88-7-7.94m9 7.93V13h6.93c-.45 3.61-3.32 6.48-6.93 6.93" />
-    </>
-  ),
-  "retirement": (
-    <>
-      <path d="M13.5 5.5c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2m6.5 7V23h-1V12.5c0-.28-.22-.5-.5-.5s-.5.22-.5.5v1h-1v-.69c-1.46-.38-2.7-1.29-3.51-2.52-.31.87-.49 1.78-.49 2.71 0 .23.02.46.03.69L15 16.5V23h-2v-5l-1.78-2.54L11 19l-3 4-1.6-1.2L9 18.33V13c0-1.15.18-2.29.5-3.39l-1.5.85V14H6V9.3l5.4-3.07v.01c.59-.31 1.32-.33 1.94.03.36.21.63.51.8.85l.79 1.67C15.58 10.1 16.94 11 18.5 11c.83 0 1.5.67 1.5 1.5" />
-    </>
-  ),
-  "transfer": (
-    <>
-      <path d="M9.01 14H2v2h7.01v3L13 15l-3.99-4zm5.98-1v-3H22V8h-7.01V5L11 9z" />
-    </>
-  ),
-  "user-circle": (
-    <>
-      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2M7.35 18.5C8.66 17.56 10.26 17 12 17s3.34.56 4.65 1.5c-1.31.94-2.91 1.5-4.65 1.5s-3.34-.56-4.65-1.5m10.79-1.38C16.45 15.8 14.32 15 12 15s-4.45.8-6.14 2.12C4.7 15.73 4 13.95 4 12c0-4.42 3.58-8 8-8s8 3.58 8 8c0 1.95-.7 3.73-1.86 5.12" />
-      <path d="M12 6c-1.93 0-3.5 1.57-3.5 3.5S10.07 13 12 13s3.5-1.57 3.5-3.5S13.93 6 12 6m0 5c-.83 0-1.5-.67-1.5-1.5S11.17 8 12 8s1.5.67 1.5 1.5S12.83 11 12 11" />
-    </>
-  ),
-  "settings": (
-    <>
-      <path d="M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.09-.16-.26-.25-.44-.25-.06 0-.12.01-.17.03l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.49.42l-.38 2.65c-.61.25-1.17.59-1.69.98l-2.49-1q-.09-.03-.18-.03c-.17 0-.34.09-.43.25l-2 3.46c-.13.22-.07.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98s.03.66.07.98l-2.11 1.65c-.19.15-.24.42-.12.64l2 3.46c.09.16.26.25.44.25.06 0 .12-.01.17-.03l2.49-1c.52.4 1.08.73 1.69.98l.38 2.65c.03.24.24.42.49.42h4c.25 0 .46-.18.49-.42l.38-2.65c.61-.25 1.17-.59 1.69-.98l2.49 1q.09.03.18.03c.17 0 .34-.09.43-.25l2-3.46c.12-.22.07-.49-.12-.64zm-1.98-1.71c.04.31.05.52.05.73s-.02.43-.05.73l-.14 1.13.89.7 1.08.84-.7 1.21-1.27-.51-1.04-.42-.9.68c-.43.32-.84.56-1.25.73l-1.06.43-.16 1.13-.2 1.35h-1.4l-.19-1.35-.16-1.13-1.06-.43c-.43-.18-.83-.41-1.23-.71l-.91-.7-1.06.43-1.27.51-.7-1.21 1.08-.84.89-.7-.14-1.13c-.03-.31-.05-.54-.05-.74s.02-.43.05-.73l.14-1.13-.89-.7-1.08-.84.7-1.21 1.27.51 1.04.42.9-.68c.43-.32.84-.56 1.25-.73l1.06-.43.16-1.13.2-1.35h1.39l.19 1.35.16 1.13 1.06.43c.43.18.83.41 1.23.71l.91.7 1.06-.43 1.27-.51.7 1.21-1.07.85-.89.7zM12 8c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4m0 6c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2" />
-    </>
-  ),
-  "shield": (
-    <>
-      <path d="M12 2 4 5v6.09c0 5.05 3.41 9.76 8 10.91 4.59-1.15 8-5.86 8-10.91V5zm6 9.09c0 4-2.55 7.7-6 8.83-3.45-1.13-6-4.82-6-8.83v-4.7l6-2.25 6 2.25z" />
-    </>
-  ),
-  "sliders": (
-    <>
-      <path d="M3 17v2h6v-2zM3 5v2h10V5zm10 16v-2h8v-2h-8v-2h-2v6zM7 9v2H3v2h4v2h2V9zm14 4v-2H11v2zm-6-4h2V7h4V5h-4V3h-2z" />
-    </>
-  ),
-  "printer": (
-    <>
-      <path d="M19 8h-1V3H6v5H5c-1.66 0-3 1.34-3 3v6h4v4h12v-4h4v-6c0-1.66-1.34-3-3-3M8 5h8v3H8zm8 12v2H8v-4h8zm2-2v-2H6v2H4v-4c0-.55.45-1 1-1h14c.55 0 1 .45 1 1v4z" />
-      <circle cx="18" cy="11.5" r="1" />
-    </>
-  ),
-  "money": (
-    <>
-      <path d="M19 14V6c0-1.1-.9-2-2-2H3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2m-2 0H3V6h14zm-7-7c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3m13 0v11c0 1.1-.9 2-2 2H4v-2h17V7z" />
-    </>
-  ),
-  "logout": (
-    <>
-      <path d="m17 8-1.41 1.41L17.17 11H9v2h8.17l-1.58 1.58L17 16l4-4zM5 5h7V3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h7v-2H5z" />
-    </>
-  ),
-  "key": (
-    <>
-      <path d="M22 19h-6v-4h-2.68c-1.14 2.42-3.6 4-6.32 4-3.86 0-7-3.14-7-7s3.14-7 7-7c2.72 0 5.17 1.58 6.32 4H24v6h-2zm-4-2h2v-4h2v-2H11.94l-.23-.67C11.01 8.34 9.11 7 7 7c-2.76 0-5 2.24-5 5s2.24 5 5 5c2.11 0 4.01-1.34 4.71-3.33l.23-.67H18zM7 15c-1.65 0-3-1.35-3-3s1.35-3 3-3 3 1.35 3 3-1.35 3-3 3m0-4c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1" />
-    </>
-  ),
-  "menu": (
-    <>
-      <path d="M3 18h18v-2H3zm0-5h18v-2H3zm0-7v2h18V6z" />
-    </>
-  ),
-  "close": (
-    <>
-      <path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />
-    </>
-  ),
-  "chevron": (
-    <>
-      <path d="M10 6 8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" />
-    </>
-  ),
-  "search": (
-    <>
-      <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14" />
-    </>
-  ),
-  "bell": (
-    <>
-      <path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2m6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1zm-2 1H8v-6c0-2.48 1.51-4.5 4-4.5s4 2.02 4 4.5z" />
-    </>
-  ),
-  "help": (
-    <>
-      <path d="M11 18h2v-2h-2zm1-16C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8m0-14c-2.21 0-4 1.79-4 4h2c0-1.1.9-2 2-2s2 .9 2 2c0 2-3 1.75-3 5h2c0-2.25 3-2.5 3-5 0-2.21-1.79-4-4-4" />
-    </>
-  ),
-  "pencil": (
-    <>
-      <path d="m14.06 9.02.92.92L5.92 19H5v-.92zM17.66 3c-.25 0-.51.1-.7.29l-1.83 1.83 3.75 3.75 1.83-1.83c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.2-.2-.45-.29-.71-.29m-3.6 3.19L3 17.25V21h3.75L17.81 9.94z" />
-    </>
-  ),
-  "eye": (
-    <>
-      <path d="M12 6c3.79 0 7.17 2.13 8.82 5.5C19.17 14.87 15.79 17 12 17s-7.17-2.13-8.82-5.5C4.83 8.13 8.21 6 12 6m0-2C7 4 2.73 7.11 1 11.5 2.73 15.89 7 19 12 19s9.27-3.11 11-7.5C21.27 7.11 17 4 12 4m0 5c1.38 0 2.5 1.12 2.5 2.5S13.38 14 12 14s-2.5-1.12-2.5-2.5S10.62 9 12 9m0-2c-2.48 0-4.5 2.02-4.5 4.5S9.52 16 12 16s4.5-2.02 4.5-4.5S14.48 7 12 7" />
-    </>
-  ),
-  "chevron-double-left": (
-    <>
-      <path d="M17.59 18 19 16.59 14.42 12 19 7.41 17.59 6l-6 6z" />
-      <path d="m11 18 1.41-1.41L7.83 12l4.58-4.59L11 6l-6 6z" />
-    </>
-  ),
-  "filter": (
-    <>
-      <path d="M10 18h4v-2h-4zM3 6v2h18V6zm3 7h12v-2H6z" />
-    </>
-  ),
-  "x-circle": (
-    <>
-      <path d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8m3.59-13L12 10.59 8.41 7 7 8.41 10.59 12 7 15.59 8.41 17 12 13.41 15.59 17 17 15.59 13.41 12 17 8.41z" />
-    </>
-  ),
+const ICONS: Record<string, ComponentType<SvgIconProps>> = {
+  dashboard: DashboardOutlined,
+  employee: PersonOutlineOutlined,
+  "leave-balance": EventAvailableOutlined,
+  "leave-assign": EventOutlined,
+  "special-deduction": RemoveCircleOutlineOutlined,
+  attendance: FactCheckOutlined,
+  "pay-change": SwapHorizOutlined,
+  allowance: AddCircleOutlineOutlined,
+  deduction: RemoveOutlined,
+  "income-tax": ReceiptLongOutlined,
+  "da-arrears": TrendingUpOutlined,
+  "seventh-pay": WorkspacePremiumOutlined,
+  "bill-create": NoteAddOutlined,
+  "bill-process": AutorenewOutlined,
+  "bill-report": BarChartOutlined,
+  "salary-slip": DescriptionOutlined,
+  "deduction-report": PieChartOutlineOutlined,
+  retirement: ElderlyOutlined,
+  transfer: CompareArrowsOutlined,
+  "user-circle": AccountCircleOutlined,
+  settings: SettingsOutlined,
+  shield: ShieldOutlined,
+  sliders: TuneOutlined,
+  printer: PrintOutlined,
+  money: PaymentsOutlined,
+  logout: LogoutOutlined,
+  key: VpnKeyOutlined,
+  menu: MenuOutlined,
+  close: CloseOutlined,
+  chevron: ChevronRightOutlined,
+  search: SearchOutlined,
+  bell: NotificationsOutlined,
+  help: HelpOutlineOutlined,
+  pencil: EditOutlined,
+  eye: VisibilityOutlined,
+  "eye-off": VisibilityOffOutlined,
+  "chevron-double-left": KeyboardDoubleArrowLeftOutlined,
+  filter: FilterListOutlined,
+  "x-circle": CancelOutlined,
 };
 
+// Tailwind spacing scale: 1 unit = 0.25rem = 4px. Covers every h-*/w-* value
+// currently used on <Icon>; falls back to 20px (within the 20–22px MHADA
+// icon guideline) for anything else, e.g. sizing driven by a parent's
+// font-size instead.
+const SPACING_PX: Record<string, number> = {
+  "3": 12,
+  "3.5": 14,
+  "4": 16,
+  "4.5": 18,
+  "5": 20,
+  "6": 24,
+  "7": 28,
+};
+
+function sizeFromClassName(className?: string): number {
+  if (!className) return 20;
+  const arbitrary = className.match(/h-\[(\d+)px\]/);
+  if (arbitrary) return Number(arbitrary[1]);
+  const scale = className.match(/(?:^|\s)h-([\d.]+)(?:\s|$)/);
+  if (scale && SPACING_PX[scale[1]] !== undefined) return SPACING_PX[scale[1]];
+  return 20;
+}
+
 export default function Icon({ name, className }: IconProps) {
-  const content = PATHS[name] ?? PATHS.dashboard;
+  const Glyph = ICONS[name] ?? ICONS.dashboard;
+  const px = sizeFromClassName(className);
   return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="currentColor"
+    <Glyph
       className={className}
       aria-hidden="true"
-    >
-      {content}
-    </svg>
+      // Inline style always wins over MUI's own generated CSS class, so the
+      // Tailwind h-*/w-* size implied by className renders exactly as
+      // intended regardless of stylesheet insertion order.
+      style={{ width: px, height: px, fontSize: px }}
+    />
   );
 }

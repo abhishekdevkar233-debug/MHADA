@@ -9,6 +9,7 @@
 
 import { useState } from "react";
 import DatePicker from "@/components/DatePicker";
+import Icon from "@/components/Icon";
 
 export const inputCls =
   "w-full rounded-[9px] border-[1.5px] border-border bg-white px-3 py-2.5 text-[13.5px] text-ink outline-none transition-colors focus:border-primary disabled:bg-border-soft disabled:text-muted";
@@ -182,18 +183,10 @@ export function SelectField({
           ))}
         </select>
         <span className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-muted-2">
-          <ChevronDownIcon />
+          <Icon name="chevron" className="h-3.5 w-3.5 rotate-90" />
         </span>
       </div>
     </div>
-  );
-}
-
-function ChevronDownIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="h-3.5 w-3.5" aria-hidden="true">
-      <path d="M9 6l6 6-6 6" transform="rotate(90 12 12)" />
-    </svg>
   );
 }
 
