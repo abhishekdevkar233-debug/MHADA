@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Poppins, Inter, IBM_Plex_Mono, Noto_Sans_Devanagari } from "next/font/google";
 import { StyledEngineProvider } from "@mui/material/styles";
 import { LangProvider } from "@/lib/i18n";
+import { ThemeProvider } from "@/lib/theme";
 import "./globals.css";
 
 const poppins = Poppins({
@@ -52,7 +53,9 @@ export default function RootLayout({
           silently overridden by MUI's own CSS.
         */}
         <StyledEngineProvider injectFirst>
-          <LangProvider>{children}</LangProvider>
+          <ThemeProvider>
+            <LangProvider>{children}</LangProvider>
+          </ThemeProvider>
         </StyledEngineProvider>
       </body>
     </html>

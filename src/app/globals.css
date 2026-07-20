@@ -1,5 +1,12 @@
 @import "tailwindcss";
 
+/*
+ * Theme 01 — Default Blue. All screens are built entirely on these CSS
+ * custom properties (via the @theme inline block below, which maps every
+ * Tailwind color token to a var() indirection rather than a literal value),
+ * so overriding this palette per `data-theme` is enough to re-skin the
+ * whole app — no component ever hardcodes a color.
+ */
 :root {
   --ink: #16202e;
   --canvas: #f4f6f9;
@@ -19,6 +26,45 @@
   --success-tint: #e5f0e9;
   --warning: #a66a1e;
   --warning-tint: #f6ecdd;
+}
+
+/* Theme 02 — Purple: soft purple primary, lavender accents, pastel surfaces. */
+:root[data-theme="purple"] {
+  --canvas: #f7f5fb;
+  --primary: #6b4fa0;
+  --primary-dark: #4f3878;
+  --primary-tint: #efe9f8;
+  --accent: #8a6fc2;
+  --accent-tint: #f2eefa;
+  --accent-dark: #5d4390;
+  --border: #e3dcf0;
+  --border-soft: #ece6f6;
+}
+
+/* Theme 03 — Maroon: elegant maroon primary, soft rose accents, warm neutrals. */
+:root[data-theme="maroon"] {
+  --canvas: #f9f5f4;
+  --primary: #7a2635;
+  --primary-dark: #591a26;
+  --primary-tint: #f5e6e8;
+  --accent: #a8455a;
+  --accent-tint: #f7ebee;
+  --accent-dark: #6e2536;
+  --border: #ecdcdd;
+  --border-soft: #f2e8e8;
+}
+
+/* Theme 04 — Fresh Cold: slate/teal primary, powder-blue accents, ice-gray surfaces. */
+:root[data-theme="cold"] {
+  --canvas: #f3f7f7;
+  --primary: #3d6e78;
+  --primary-dark: #2a4f57;
+  --primary-tint: #e3f1ef;
+  --accent: #5b8a9a;
+  --accent-tint: #e8f2f4;
+  --accent-dark: #3d6272;
+  --border: #dbe8e6;
+  --border-soft: #e7f0ef;
 }
 
 @theme inline {
@@ -78,4 +124,16 @@
 
 .animate-fade-in-up {
   animation: fade-in-up 0.4s ease-out both;
+}
+
+/*
+ * Smooth theme-switch repaint. Lowest possible specificity (universal
+ * selector) so any element with its own transition-* utility class keeps
+ * that behavior untouched — this only fills in the elements that don't
+ * already animate on their own.
+ */
+* {
+  transition-property: background-color, border-color, color, fill, stroke, box-shadow;
+  transition-duration: 250ms;
+  transition-timing-function: ease;
 }

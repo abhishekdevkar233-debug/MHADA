@@ -40,6 +40,8 @@ import VisibilityOffOutlined from "@mui/icons-material/VisibilityOffOutlined";
 import KeyboardDoubleArrowLeftOutlined from "@mui/icons-material/KeyboardDoubleArrowLeftOutlined";
 import FilterListOutlined from "@mui/icons-material/FilterListOutlined";
 import CancelOutlined from "@mui/icons-material/CancelOutlined";
+import PaletteOutlined from "@mui/icons-material/PaletteOutlined";
+import CheckOutlined from "@mui/icons-material/CheckOutlined";
 
 type IconProps = {
   name: string;
@@ -92,6 +94,8 @@ const ICONS: Record<string, ComponentType<SvgIconProps>> = {
   "chevron-double-left": KeyboardDoubleArrowLeftOutlined,
   filter: FilterListOutlined,
   "x-circle": CancelOutlined,
+  palette: PaletteOutlined,
+  check: CheckOutlined,
 };
 
 // Tailwind spacing scale: 1 unit = 0.25rem = 4px. Covers every h-*/w-* value

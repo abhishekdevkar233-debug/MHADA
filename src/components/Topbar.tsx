@@ -7,6 +7,7 @@ import { findRoute } from "@/lib/nav";
 import Icon from "@/components/Icon";
 import { Label, Toast } from "@/components/form/Field";
 import { useLang } from "@/lib/i18n";
+import { THEMES, useTheme } from "@/lib/theme";
 
 type NotificationItem = {
   id: string;
@@ -89,6 +90,8 @@ export default function Topbar({ onMenuOpen }: TopbarProps) {
 
         {/* Right: actions + user */}
         <div className="flex flex-shrink-0 items-center gap-1.5 sm:gap-2">
+          <ThemeSwitcher />
+
           <LanguageToggle lang={lang} onChange={setLang} />
 
           <button
@@ -155,6 +158,85 @@ export default function Topbar({ onMenuOpen }: TopbarProps) {
         />
       )}
     </header>
+  );
+}
+
+function ThemeSwitcher() {
+  const { theme, setTheme } = useTheme();
+  const [open, setOpen] = useState(false);
+  const rootRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!open) return;
+    function onPointerDown(e: PointerEvent) {
+      if (rootRef.current && !rootRef.current.contains(e.target as Node)) setOpen(false);
+    }
+    function onKeyDown(e: KeyboardEvent) {
+      if (e.key === "Escape") setOpen(false);
+    }
+    document.addEventListener("pointerdown", onPointerDown);
+    document.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.removeEventListener("pointerdown", onPointerDown);
+      document.removeEventListener("keydown", onKeyDown);
+    };
+  }, [open]);
+
+  return (
+    <div ref={rootRef} className="relative">
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        aria-label="Change theme"
+        aria-expanded={open}
+        className="flex h-9 w-9 items-center justify-center rounded-lg text-muted transition-colors hover:bg-canvas hover:text-ink"
+      >
+        <Icon name="palette" className="h-[18px] w-[18px]" />
+      </button>
+
+      <div
+        className={`absolute top-full right-0 z-30 mt-2 w-[240px] origin-top-right rounded-xl border border-border bg-surface shadow-[0_20px_45px_-15px_rgba(22,35,28,0.35)] transition-all duration-150 ${
+          open ? "translate-y-0 scale-100 opacity-100" : "pointer-events-none -translate-y-1 scale-95 opacity-0"
+        }`}
+      >
+        <div className="border-b border-border-soft px-4 py-3">
+          <h3 className="text-[13.5px] font-semibold text-ink">Theme</h3>
+          <p className="mt-0.5 text-[11.5px] text-muted">Preview a different color palette</p>
+        </div>
+        <div className="p-1.5">
+          {THEMES.map((t) => {
+            const active = t.id === theme;
+            return (
+              <button
+                key={t.id}
+                type="button"
+                onClick={() => {
+                  setTheme(t.id);
+                  setOpen(false);
+                }}
+                className={`flex w-full items-center gap-2.5 rounded-[8px] px-2.5 py-2 text-left transition-colors ${
+                  active ? "bg-primary-tint" : "hover:bg-canvas"
+                }`}
+              >
+                <span className="flex flex-shrink-0 items-center -space-x-1.5">
+                  {t.swatches.map((c, i) => (
+                    <span
+                      key={i}
+                      className="h-4 w-4 rounded-full border border-white/80 shadow-sm"
+                      style={{ backgroundColor: c }}
+                    />
+                  ))}
+                </span>
+                <span className={`flex-1 text-[12.5px] font-medium ${active ? "text-primary" : "text-ink"}`}>
+                  {t.label}
+                </span>
+                {active && <Icon name="check" className="h-4 w-4 flex-shrink-0 text-primary" />}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+    </div>
   );
 }
 
