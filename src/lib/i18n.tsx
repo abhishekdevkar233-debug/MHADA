@@ -1,6 +1,7 @@
 "use client";
 
 import { createContext, useContext, useState } from "react";
+import { MR } from "@/lib/translations";
 
 export type Lang = "en" | "mr";
 
@@ -40,4 +41,15 @@ export function useLang() {
 /** Pick the English or Marathi string for the current language. */
 export function pick(lang: Lang, en: string, mr: string) {
   return lang === "mr" ? mr : en;
+}
+
+/**
+ * Dictionary-backed translator: `t("Save")` returns the Marathi string when
+ * the current language is Marathi, falling back to the English input
+ * unchanged if no translation is registered yet. Safe to call with dynamic
+ * strings (e.g. user data) — untranslated text just passes through.
+ */
+export function useT() {
+  const { lang } = useLang();
+  return (en: string) => (lang === "mr" ? (MR[en] ?? en) : en);
 }

@@ -3,6 +3,7 @@
 import { useRef, useState } from "react";
 import Icon from "@/components/Icon";
 import PageHeader from "@/components/PageHeader";
+import { useT } from "@/lib/i18n";
 import {
   Label,
   TextField,
@@ -10,7 +11,7 @@ import {
   SelectField,
   CheckField,
   RadioField,
-  MultiCheckList,
+  MultiSelectDropdown,
   SectionTitle,
   Toast,
   inputCls,
@@ -759,31 +760,101 @@ function StepLanguagesEducation({ hidden }: { hidden: boolean }) {
   return (
     <div className={hidden ? "hidden" : ""}>
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-        <MultiCheckList label="Known Languages" options={LANGUAGES} />
-        <MultiCheckList label="Educational Qualification" required options={QUALIFICATIONS} />
+        <MultiSelectDropdown label="Known Languages" options={LANGUAGES} placeholder="Select languages…" />
+        <MultiSelectDropdown label="Educational Qualification" required options={QUALIFICATIONS} placeholder="Select qualification…" />
       </div>
 
       <div className="mt-6">
-        <Label>Photograph</Label>
-        <div className="flex flex-wrap items-start gap-5">
-          <div className="flex h-28 w-28 flex-shrink-0 flex-col items-center justify-center rounded-xl border-[1.5px] border-dashed border-border bg-border-soft text-center text-[11px] font-medium text-muted-2">
-            NO IMAGE
-            <br />
-            AVAILABLE
+        <PhotoUpload />
+      </div>
+    </div>
+  );
+}
+
+const MAX_PHOTO_BYTES = 1024 * 1024;
+
+function PhotoUpload() {
+  const t = useT();
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [file, setFile] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [uploaded, setUploaded] = useState(false);
+
+  function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const selected = e.target.files?.[0] ?? null;
+    setUploaded(false);
+    if (!selected) {
+      setFile(null);
+      setPreviewUrl(null);
+      setError(null);
+      return;
+    }
+    if (!selected.type.startsWith("image/")) {
+      setError(t("Please choose an image file."));
+      setFile(null);
+      setPreviewUrl(null);
+      return;
+    }
+    if (selected.size > MAX_PHOTO_BYTES) {
+      setError(t("Upload passport size photo of less than 1MB."));
+      setFile(null);
+      setPreviewUrl(null);
+      return;
+    }
+    setError(null);
+    setFile(selected);
+    setPreviewUrl(URL.createObjectURL(selected));
+  }
+
+  return (
+    <div>
+      <Label>Photograph</Label>
+      <div className="flex flex-wrap items-start gap-5">
+        <div className="flex h-28 w-28 flex-shrink-0 items-center justify-center overflow-hidden rounded-xl border-[1.5px] border-dashed border-border bg-border-soft text-center text-[11px] font-medium text-muted-2">
+          {previewUrl ? (
+            // eslint-disable-next-line @next/next/no-img-element -- transient client-side object URL, not a static asset
+            <img src={previewUrl} alt={t("Employee photograph preview")} className="h-full w-full object-cover" />
+          ) : (
+            <>
+              {t("NO IMAGE")}
+              <br />
+              {t("AVAILABLE")}
+            </>
+          )}
+        </div>
+        <div>
+          <input ref={inputRef} type="file" accept="image/*" className="hidden" onChange={handleFileChange} />
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => inputRef.current?.click()}
+              className="rounded-[8px] border-[1.5px] border-border px-3.5 py-2 text-[12.5px] font-semibold text-ink hover:border-muted-2"
+            >
+              {t("Choose File")}
+            </button>
+            <button
+              type="button"
+              disabled={!file}
+              onClick={() => setUploaded(true)}
+              className="rounded-[8px] bg-primary px-3.5 py-2 text-[12.5px] font-semibold text-white hover:bg-primary-dark disabled:cursor-not-allowed disabled:opacity-40"
+            >
+              {t("Upload")}
+            </button>
           </div>
-          <div>
-            <div className="flex items-center gap-2">
-              <button type="button" className="rounded-[8px] border-[1.5px] border-border px-3.5 py-2 text-[12.5px] font-semibold text-ink hover:border-muted-2">
-                Choose File
-              </button>
-              <button type="button" className="rounded-[8px] bg-primary px-3.5 py-2 text-[12.5px] font-semibold text-white hover:bg-primary-dark">
-                Upload
-              </button>
-            </div>
-            <p className="mt-2 text-[11.5px] font-medium text-danger">
-              Upload passport size photo of less than 1MB.
+          {file && <p className="mt-2 truncate text-[11.5px] text-muted">{file.name}</p>}
+          {error ? (
+            <p className="mt-2 text-[11.5px] font-medium text-danger">{error}</p>
+          ) : uploaded ? (
+            <p className="mt-2 flex items-center gap-1 text-[11.5px] font-medium text-success">
+              <Icon name="attendance" className="h-3.5 w-3.5" />
+              {t("Photograph uploaded.")}
             </p>
-          </div>
+          ) : (
+            <p className="mt-2 text-[11.5px] font-medium text-muted-2">
+              {t("Upload passport size photo of less than 1MB.")}
+            </p>
+          )}
         </div>
       </div>
     </div>

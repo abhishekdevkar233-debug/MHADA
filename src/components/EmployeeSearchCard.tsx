@@ -4,6 +4,7 @@ import { useRef, useState } from "react";
 import Icon from "@/components/Icon";
 import { Label } from "@/components/form/Field";
 import { EMPLOYEE_DIRECTORY, type DirectoryEmployee } from "@/lib/employee-directory";
+import { useT } from "@/lib/i18n";
 
 /**
  * Shared "search employee → summary card" pattern used by any screen that
@@ -21,6 +22,7 @@ export default function EmployeeSearchCard({
   employees?: DirectoryEmployee[];
   required?: boolean;
 }) {
+  const t = useT();
   const [query, setQuery] = useState("");
   const [open, setOpen] = useState(false);
   const blurTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -62,7 +64,7 @@ export default function EmployeeSearchCard({
                 <span className="font-mono text-[12px] text-muted-2">ID {employee.id}</span>
                 <span className="flex items-center gap-1">
                   <Icon name="shield" className="h-3.5 w-3.5" />
-                  {employee.department}
+                  {t(employee.department)}
                 </span>
                 <span className="flex items-center gap-1">
                   <Icon name="employee" className="h-3.5 w-3.5" />
@@ -79,7 +81,7 @@ export default function EmployeeSearchCard({
             }}
             className="flex-shrink-0 rounded-[8px] border-[1.5px] border-border px-3 py-1.5 text-[12.5px] font-semibold text-ink transition-colors hover:border-muted-2"
           >
-            Change Employee
+            {t("Change Employee")}
           </button>
         </div>
       </div>
@@ -88,7 +90,7 @@ export default function EmployeeSearchCard({
 
   return (
     <div className="relative">
-      <Label required={required}>Search Employee</Label>
+      <Label required={required}>{t("Search Employee")}</Label>
       <div className="relative">
         <span className="pointer-events-none absolute inset-y-0 left-3 flex items-center text-muted-2">
           <Icon name="search" className="h-4 w-4" />
@@ -99,7 +101,7 @@ export default function EmployeeSearchCard({
           onChange={(e) => setQuery(e.target.value)}
           onFocus={handleFocus}
           onBlur={handleBlur}
-          placeholder="Search by Employee Name or Employee ID"
+          placeholder={t("Search by Employee Name or Employee ID")}
           className="w-full rounded-[9px] border-[1.5px] border-border bg-white py-2.5 pr-3 pl-9 text-[13.5px] text-ink outline-none transition-colors focus:border-primary"
         />
       </div>
@@ -107,7 +109,7 @@ export default function EmployeeSearchCard({
       {open && (
         <div className="absolute z-20 mt-1.5 max-h-64 w-full overflow-y-auto rounded-[9px] border border-border bg-surface shadow-[0_12px_30px_-10px_rgba(22,35,28,0.25)]">
           {matches.length === 0 ? (
-            <div className="px-3.5 py-4 text-center text-[13px] text-muted">No employees found.</div>
+            <div className="px-3.5 py-4 text-center text-[13px] text-muted">{t("No employees found.")}</div>
           ) : (
             matches.map((e) => (
               <button
@@ -124,7 +126,7 @@ export default function EmployeeSearchCard({
                 <span className="min-w-0">
                   <span className="block truncate font-medium text-ink">{e.name}</span>
                   <span className="block text-[11.5px] text-muted">
-                    {e.department} · {e.designation}
+                    {t(e.department)} · {e.designation}
                   </span>
                 </span>
                 <span className="flex-shrink-0 font-mono text-[11.5px] text-muted-2">{e.id}</span>

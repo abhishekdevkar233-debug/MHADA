@@ -3,6 +3,7 @@
 import { useRef, useState } from "react";
 import Icon from "@/components/Icon";
 import { Label } from "@/components/form/Field";
+import { useT } from "@/lib/i18n";
 
 /**
  * Generic searchable dropdown: type to filter a flat list of string options,
@@ -24,6 +25,7 @@ export default function SearchableSelect({
   options: string[];
   placeholder?: string;
 }) {
+  const t = useT();
   const [query, setQuery] = useState("");
   const [open, setOpen] = useState(false);
   const blurTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -42,15 +44,15 @@ export default function SearchableSelect({
 
   return (
     <div className="relative">
-      {label && <Label required={required}>{label}</Label>}
+      {label && <Label required={required}>{t(label)}</Label>}
       <div className="relative">
         <input
           type="text"
-          value={open ? query : value}
+          value={open ? query : t(value)}
           onChange={(e) => setQuery(e.target.value)}
           onFocus={handleFocus}
           onBlur={handleBlur}
-          placeholder={placeholder}
+          placeholder={t(placeholder)}
           className="w-full rounded-[9px] border-[1.5px] border-border bg-white px-3 py-2.5 text-[13.5px] text-ink outline-none transition-colors focus:border-primary"
         />
         <span className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-muted-2">
@@ -60,7 +62,7 @@ export default function SearchableSelect({
       {open && (
         <div className="absolute z-20 mt-1.5 max-h-56 w-full overflow-y-auto rounded-[9px] border border-border bg-surface shadow-[0_12px_30px_-10px_rgba(22,35,28,0.25)]">
           {matches.length === 0 ? (
-            <div className="px-3.5 py-4 text-center text-[13px] text-muted">No matches.</div>
+            <div className="px-3.5 py-4 text-center text-[13px] text-muted">{t("No matches.")}</div>
           ) : (
             matches.map((o) => (
               <button
@@ -76,7 +78,7 @@ export default function SearchableSelect({
                   o === value ? "bg-primary-tint font-medium text-primary" : "text-ink"
                 }`}
               >
-                {o}
+                {t(o)}
               </button>
             ))
           )}

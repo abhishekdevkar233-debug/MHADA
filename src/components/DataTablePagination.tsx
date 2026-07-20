@@ -1,6 +1,7 @@
 "use client";
 
 import Icon from "@/components/Icon";
+import { useLang, useT } from "@/lib/i18n";
 
 const DEFAULT_ROWS_PER_PAGE_OPTIONS = [10, 12, 25, 50];
 
@@ -36,6 +37,17 @@ export default function DataTablePagination({
   total: number;
   itemLabel?: string;
 }) {
+  const t = useT();
+  const { lang } = useLang();
+  const label = t(itemLabel);
+  const summary =
+    total === 0
+      ? lang === "mr"
+        ? `दाखवण्यासाठी कोणतेही ${label} नाहीत`
+        : `No ${itemLabel} to show`
+      : lang === "mr"
+        ? `${total} पैकी ${start}–${end} ${label} दाखवत आहे`
+        : `Showing ${start}–${end} of ${total} ${itemLabel}`;
   const pageNumbers = Array.from({ length: totalPages }, (_, i) => i + 1)
     .filter((n) => totalPages <= 7 || n === 1 || n === totalPages || Math.abs(n - page) <= 1)
     .reduce<number[]>((acc, n) => {
@@ -46,13 +58,11 @@ export default function DataTablePagination({
 
   return (
     <div className="flex flex-wrap items-center justify-between gap-3 border-t border-border-soft px-4 py-3">
-      <div className="text-[12.5px] text-muted">
-        {total === 0 ? `No ${itemLabel} to show` : `Showing ${start}–${end} of ${total} ${itemLabel}`}
-      </div>
+      <div className="text-[12.5px] text-muted">{summary}</div>
 
       <div className="flex items-center gap-3">
         <div className="flex items-center gap-1.5 text-[12.5px] text-muted">
-          Rows per page
+          {t("Rows per page")}
           <div className="relative">
             <select
               value={rowsPerPage}
@@ -80,7 +90,7 @@ export default function DataTablePagination({
             className="flex h-8 items-center gap-1 rounded-[7px] border-[1.5px] border-border px-2.5 text-[12.5px] font-semibold text-ink transition-colors hover:border-muted-2 disabled:cursor-not-allowed disabled:opacity-40"
           >
             <Icon name="chevron" className="h-3.5 w-3.5 rotate-180" />
-            Previous
+            {t("Previous")}
           </button>
 
           <div className="mx-1 flex items-center gap-1">
@@ -111,7 +121,7 @@ export default function DataTablePagination({
             disabled={page === totalPages}
             className="flex h-8 items-center gap-1 rounded-[7px] border-[1.5px] border-border px-2.5 text-[12.5px] font-semibold text-ink transition-colors hover:border-muted-2 disabled:cursor-not-allowed disabled:opacity-40"
           >
-            Next
+            {t("Next")}
             <Icon name="chevron" className="h-3.5 w-3.5" />
           </button>
         </div>
