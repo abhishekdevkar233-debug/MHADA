@@ -6,11 +6,16 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { NAV } from "@/lib/nav";
 import Icon from "@/components/Icon";
+import { useLang } from "@/lib/i18n";
 
 type SidebarProps = {
   open: boolean;
   onClose: () => void;
 };
+
+function visibleChildren(menu: (typeof NAV)[number]) {
+  return menu.children.filter((c) => !c.hidden);
+}
 
 function activeMenuKey(pathname: string): string | null {
   for (const menu of NAV) {
@@ -25,6 +30,7 @@ function activeMenuKey(pathname: string): string | null {
 
 export default function Sidebar({ open, onClose }: SidebarProps) {
   const pathname = usePathname();
+  const { lang } = useLang();
   const activeKey = activeMenuKey(pathname);
   const [expanded, setExpanded] = useState<Set<string>>(
     () => new Set(activeKey ? [activeKey] : []),
@@ -101,8 +107,9 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
 
         {/* Nav — 8 top-level menus */}
         <nav className="flex-1 overflow-y-auto px-3 py-3" aria-label="Primary">
-          {NAV.filter((menu) => !menu.hidden).map((menu) => {
+          {NAV.filter((menu) => !menu.hidden && (menu.children.length === 0 || visibleChildren(menu).length > 0)).map((menu) => {
             const isActiveMenu = menu.key === activeKey;
+            const children = visibleChildren(menu);
 
             // Childless top menu (e.g. Remuneration) renders as a direct link.
             if (menu.children.length === 0) {
@@ -123,7 +130,9 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
                     name={menu.icon}
                     className="h-[18px] w-[18px] flex-shrink-0 text-white/70"
                   />
-                  <span className="min-w-0 flex-1 truncate">{menu.label}</span>
+                  <span className={`min-w-0 flex-1 truncate ${lang === "mr" ? "dv" : ""}`}>
+                    {lang === "mr" ? menu.dv : menu.label}
+                  </span>
                 </Link>
               );
             }
@@ -145,7 +154,9 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
                     name={menu.icon}
                     className="h-[18px] w-[18px] flex-shrink-0 text-white/70"
                   />
-                  <span className="min-w-0 flex-1 truncate">{menu.label}</span>
+                  <span className={`min-w-0 flex-1 truncate ${lang === "mr" ? "dv" : ""}`}>
+                    {lang === "mr" ? menu.dv : menu.label}
+                  </span>
                   <Icon
                     name="chevron"
                     className={`h-3.5 w-3.5 flex-shrink-0 text-white/45 transition-transform ${
@@ -156,7 +167,7 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
 
                 {isOpen && (
                   <div className="mt-0.5 mb-1 space-y-0.5 pl-3">
-                    {menu.children.map((item) => {
+                    {children.map((item) => {
                       const active = pathname === item.href;
                       return (
                         <Link
@@ -175,7 +186,9 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
                               active ? "bg-white" : "bg-white/30"
                             }`}
                           />
-                          <span className="min-w-0 flex-1 truncate">{item.label}</span>
+                          <span className={`min-w-0 flex-1 truncate ${lang === "mr" ? "dv" : ""}`}>
+                            {lang === "mr" ? item.dv : item.label}
+                          </span>
                         </Link>
                       );
                     })}

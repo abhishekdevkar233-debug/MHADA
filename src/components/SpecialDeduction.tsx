@@ -2,6 +2,7 @@
 
 import { useMemo, useRef, useState } from "react";
 import Icon from "@/components/Icon";
+import PageHeader from "@/components/PageHeader";
 import DataTablePagination from "@/components/DataTablePagination";
 import { Toast } from "@/components/form/Field";
 import { EMPLOYEE_DIRECTORY } from "@/lib/employee-directory";
@@ -121,12 +122,7 @@ export default function SpecialDeduction() {
 
   return (
     <div className="mx-auto max-w-6xl">
-      <div className="mb-6">
-        <div className="inline-flex items-center gap-1.5 rounded-full bg-border-soft px-3 py-1 text-[11.5px] font-medium text-muted-2">
-          Operations <span>›</span> <span className="text-accent-dark">Special Deduction Assignment</span>
-        </div>
-        <h1 className="disp mt-3 text-[22px] font-semibold text-ink">Special Deduction Assignment</h1>
-      </div>
+      <PageHeader routeKey="special-deduction" title="Special Deduction Assignment" />
 
       {/* Filters */}
       <div className="mb-5 rounded-xl border border-border bg-surface p-4 shadow-[0_1px_2px_rgba(22,35,28,0.04)] sm:p-5">

@@ -3,6 +3,7 @@
 import { useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import Icon from "@/components/Icon";
+import PageHeader from "@/components/PageHeader";
 import StatusBadge from "@/components/StatusBadge";
 import DataTablePagination from "@/components/DataTablePagination";
 import { Toast } from "@/components/form/Field";
@@ -118,15 +119,11 @@ export default function MySalarySlip() {
 
   return (
     <div className="mx-auto max-w-5xl">
-      <div className="mb-6">
-        <div className="inline-flex items-center gap-1.5 rounded-full bg-border-soft px-3 py-1 text-[11.5px] font-medium text-muted-2">
-          Reports — Ink-Jet <span>›</span> <span className="text-accent-dark">Pay Slip</span>
-        </div>
-        <h1 className="disp mt-3 text-[22px] font-semibold text-ink">My Salary Slip</h1>
-        <p className="mt-1.5 max-w-2xl text-[13.5px] leading-relaxed text-muted">
-          Select a month and year to view, print, or download your salary slip.
-        </p>
-      </div>
+      <PageHeader
+        routeKey="ij-pay-slip"
+        title="My Salary Slip"
+        subtitle="Select a month and year to view, print, or download your salary slip."
+      />
 
       {/* Profile card */}
       <div className="mb-5 flex items-center gap-3 rounded-xl border border-border bg-surface p-4 shadow-[0_1px_2px_rgba(22,35,28,0.04)]">

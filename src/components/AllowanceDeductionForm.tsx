@@ -2,6 +2,7 @@
 
 import { useMemo, useRef, useState } from "react";
 import Icon from "@/components/Icon";
+import PageHeader from "@/components/PageHeader";
 import { DateField, Toast } from "@/components/form/Field";
 import SearchableSelect from "@/components/SearchableSelect";
 import StatusBadge from "@/components/StatusBadge";
@@ -69,6 +70,7 @@ export default function AllowanceDeductionForm({
   navGroup: string;
 }) {
   const plural = mode === "Allowance" ? "Allowances" : "Deductions";
+  const routeKey = mode === "Allowance" ? "allowance" : "deduction";
   const HISTORY = useMemo(() => makeHistory(typeOptions), [typeOptions]);
 
   const [department, setDepartment] = useState("");
@@ -162,16 +164,12 @@ export default function AllowanceDeductionForm({
 
   return (
     <div className="mx-auto max-w-6xl">
-      <div className="mb-6">
-        <div className="inline-flex items-center gap-1.5 rounded-full bg-border-soft px-3 py-1 text-[11.5px] font-medium text-muted-2">
-          {navGroup} <span>›</span> <span className="text-accent-dark">Assign {plural}</span>
-        </div>
-        <h1 className="disp mt-3 text-[22px] font-semibold text-ink">Assign {plural}</h1>
-        <p className="mt-1.5 max-w-2xl text-[13.5px] leading-relaxed text-muted">
-          Search for an employee and assign one or more {mode.toLowerCase()}s to
-          their pay sheet.
-        </p>
-      </div>
+      <PageHeader
+        routeKey={routeKey}
+        group={navGroup}
+        title={`Assign ${plural}`}
+        subtitle={`Search for an employee and assign one or more ${mode.toLowerCase()}s to their pay sheet.`}
+      />
 
       {/* Filters */}
       <div className="mb-5 rounded-xl border border-border bg-surface p-4 shadow-[0_1px_2px_rgba(22,35,28,0.04)] sm:p-5">

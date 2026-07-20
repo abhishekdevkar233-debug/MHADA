@@ -2,6 +2,7 @@
 
 import { useMemo, useRef, useState } from "react";
 import Icon from "@/components/Icon";
+import PageHeader from "@/components/PageHeader";
 import KPICard from "@/components/KPICard";
 import DataTablePagination from "@/components/DataTablePagination";
 import { Toast } from "@/components/form/Field";
@@ -145,16 +146,10 @@ export default function EmployeeAttendance() {
 
   return (
     <div className="mx-auto max-w-6xl">
-      <div className="mb-6">
-        <div className="inline-flex items-center gap-1.5 rounded-full bg-border-soft px-3 py-1 text-[11.5px] font-medium text-muted-2">
-          Operations <span>›</span> <span className="text-accent-dark">Employee Attendance</span>
-        </div>
-        <h1 className="disp mt-3 text-[22px] font-semibold text-ink">Employee Attendance</h1>
-        <p className="mt-1.5 max-w-2xl text-[13.5px] leading-relaxed text-muted">
-          Review biometric attendance, verify exceptions, and finalize monthly
-          attendance for payroll processing.
-        </p>
-      </div>
+      <PageHeader
+        routeKey="attendance"
+        subtitle="Review biometric attendance, verify exceptions, and finalize monthly attendance for payroll processing."
+      />
 
       {/* Attendance Summary */}
       <div className="mb-5 grid grid-cols-2 gap-3 sm:grid-cols-4">

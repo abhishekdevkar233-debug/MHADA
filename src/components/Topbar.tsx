@@ -5,22 +5,24 @@ import { usePathname, useRouter } from "next/navigation";
 import { findRoute } from "@/lib/nav";
 import Icon from "@/components/Icon";
 import { Label, Toast } from "@/components/form/Field";
+import { useLang } from "@/lib/i18n";
 
 type TopbarProps = {
   onMenuOpen: () => void;
 };
 
-function currentCrumb(pathname: string) {
+function currentCrumb(pathname: string, lang: "en" | "mr") {
   const key = pathname.replace(/^\//, "").split("/")[0] || "dashboard";
   const found = findRoute(key);
-  if (found) return { group: found.group, title: found.title };
-  return { group: "Home", title: "Dashboard" };
+  if (found) return { group: lang === "mr" ? found.groupDv : found.group, title: lang === "mr" ? found.titleDv : found.title };
+  return lang === "mr" ? { group: "मुख्यपृष्ठ", title: "मुख्यपृष्ठ" } : { group: "Home", title: "Dashboard" };
 }
 
 export default function Topbar({ onMenuOpen }: TopbarProps) {
   const pathname = usePathname();
   const router = useRouter();
-  const crumb = currentCrumb(pathname);
+  const { lang, setLang } = useLang();
+  const crumb = currentCrumb(pathname, lang);
   const [showChangePassword, setShowChangePassword] = useState(false);
 
   return (
@@ -36,7 +38,7 @@ export default function Topbar({ onMenuOpen }: TopbarProps) {
           <Icon name="menu" className="h-[18px] w-[18px]" />
         </button>
 
-        <div className="min-w-0 flex-1">
+        <div className={`min-w-0 flex-1 ${lang === "mr" ? "dv" : ""}`}>
           <div className="flex items-center gap-1.5 text-[11.5px] font-medium text-muted-2">
             <span className="truncate">{crumb.group}</span>
             <Icon name="chevron" className="h-3 w-3 flex-shrink-0" />
@@ -62,6 +64,8 @@ export default function Topbar({ onMenuOpen }: TopbarProps) {
 
         {/* Right: actions + user */}
         <div className="flex flex-shrink-0 items-center gap-1.5 sm:gap-2">
+          <LanguageToggle lang={lang} onChange={setLang} />
+
           <button
             type="button"
             aria-label="Search"
@@ -135,6 +139,37 @@ export default function Topbar({ onMenuOpen }: TopbarProps) {
         />
       )}
     </header>
+  );
+}
+
+function LanguageToggle({ lang, onChange }: { lang: "en" | "mr"; onChange: (lang: "en" | "mr") => void }) {
+  return (
+    <div
+      role="group"
+      aria-label="Language"
+      className="mr-1 hidden flex-shrink-0 items-center gap-0.5 rounded-lg border border-border bg-canvas p-0.5 sm:flex"
+    >
+      <button
+        type="button"
+        onClick={() => onChange("en")}
+        aria-pressed={lang === "en"}
+        className={`rounded-[6px] px-2.5 py-1.5 text-[12px] font-semibold transition-colors ${
+          lang === "en" ? "bg-primary text-white" : "text-muted hover:text-ink"
+        }`}
+      >
+        English
+      </button>
+      <button
+        type="button"
+        onClick={() => onChange("mr")}
+        aria-pressed={lang === "mr"}
+        className={`dv rounded-[6px] px-2.5 py-1.5 text-[12.5px] font-semibold transition-colors ${
+          lang === "mr" ? "bg-primary text-white" : "text-muted hover:text-ink"
+        }`}
+      >
+        मराठी
+      </button>
+    </div>
   );
 }
 

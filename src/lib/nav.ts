@@ -3,6 +3,8 @@ export type NavLeaf = {
   label: string;
   dv: string;
   href: string;
+  /** Screen isn't built yet — hidden from the sidebar/dashboard UI, but the route stays intact. */
+  hidden?: boolean;
 };
 
 export type NavMenu = {
@@ -28,6 +30,8 @@ export type NavMenu = {
  */
 export const NAV: NavMenu[] = [
   {
+    // No screens in this menu are built yet — hidden from the UI, routes/data stay intact.
+    hidden: true,
     key: "user",
     label: "User",
     dv: "युजर",
@@ -42,11 +46,11 @@ export const NAV: NavMenu[] = [
     dv: "सेटअप",
     icon: "settings",
     children: [
-      { key: "salary-info", label: "Employee Salary Information", dv: "कर्मचारी वेतनासंबंधी माहिती", href: "/salary-info" },
-      { key: "work-details", label: "Work & Service Information", dv: "कामकाज विषयक माहिती भरणे", href: "/work-details" },
+      { key: "salary-info", label: "Employee Salary Information", dv: "कर्मचारी वेतनासंबंधी माहिती", href: "/salary-info", hidden: true },
+      { key: "work-details", label: "Work & Service Information", dv: "कामकाज विषयक माहिती भरणे", href: "/work-details", hidden: true },
       { key: "leave-setup", label: "Employee Leave Information", dv: "कर्मचारी रजा माहिती", href: "/leave-setup" },
       { key: "employee-records", label: "Employee Information Correction", dv: "कर्मचारी माहिती दुरुस्ती", href: "/employee-records" },
-      { key: "seventh-pay-master", label: "7th Pay Basic Master", dv: "7th Pay Basic Master", href: "/seventh-pay-master" },
+      { key: "seventh-pay-master", label: "7th Pay Basic Master", dv: "7th Pay Basic Master", href: "/seventh-pay-master", hidden: true },
     ],
   },
   {
@@ -57,7 +61,7 @@ export const NAV: NavMenu[] = [
     children: [
       { key: "retirement", label: "Employee Retirement Information", dv: "कर्मचारी सेवानिवृत्ती माहिती", href: "/retirement" },
       { key: "employee-promotion", label: "Employee Promotion Information", dv: "कर्मचारी बढतीची माहिती", href: "/employee-promotion" },
-      { key: "district-adjustment", label: "Employee District Adjustment", dv: "कर्मचारी जिल्हा समायोजित करणे", href: "/district-adjustment" },
+      { key: "district-adjustment", label: "Employee District Adjustment", dv: "कर्मचारी जिल्हा समायोजित करणे", href: "/district-adjustment", hidden: true },
     ],
   },
   {
@@ -66,32 +70,32 @@ export const NAV: NavMenu[] = [
     dv: "संचालन",
     icon: "sliders",
     children: [
-      { key: "seventh-pay-diff", label: "Employee 7th Pay Difference", dv: "कर्मचारी सातवा वेतन फरक", href: "/seventh-pay-diff" },
+      { key: "seventh-pay-diff", label: "Employee 7th Pay Difference", dv: "कर्मचारी सातवा वेतन फरक", href: "/seventh-pay-diff", hidden: true },
       { key: "retired-seventh-pay-arrear", label: "Retired 7th Pay Arrear Calculation", dv: "Retired 7th Pay Arrear Calculation", href: "/retired-seventh-pay-arrear" },
-      { key: "recovery-management", label: "Recovery Management", dv: "वसूली", href: "/recovery-management" },
-      { key: "lic-management", label: "LIC Management", dv: "एल आय सी", href: "/lic-management" },
+      { key: "recovery-management", label: "Recovery Management", dv: "वसूली", href: "/recovery-management", hidden: true },
+      { key: "lic-management", label: "LIC Management", dv: "एल आय सी", href: "/lic-management", hidden: true },
       { key: "employee-leave", label: "Employee Leave Management", dv: "कर्मचारी रजा", href: "/employee-leave" },
       { key: "special-deduction", label: "Special Deduction", dv: "विशेष वजाती", href: "/special-deduction" },
-      { key: "bank-society-recovery", label: "Bank & Cooperative Society Recovery", dv: "बँक/सहकारी पतसंस्था वसूली", href: "/bank-society-recovery" },
+      { key: "bank-society-recovery", label: "Bank & Cooperative Society Recovery", dv: "बँक/सहकारी पतसंस्था वसूली", href: "/bank-society-recovery", hidden: true },
       { key: "attendance", label: "Employee Attendance", dv: "कर्मचारी हजेरी", href: "/attendance" },
-      { key: "pay-change", label: "Salary Component Changes", dv: "पगारपत्र परिवर्तन", href: "/pay-change" },
-      { key: "one-time-deduction", label: "One-Time Deduction", dv: "एक वेळ वजाती", href: "/one-time-deduction" },
-      { key: "salary-increment", label: "Employee Salary Increment", dv: "कर्मचारी विविध वेतनवाढ", href: "/salary-increment" },
+      { key: "pay-change", label: "Salary Component Changes", dv: "पगारपत्र परिवर्तन", href: "/pay-change", hidden: true },
+      { key: "one-time-deduction", label: "One-Time Deduction", dv: "एक वेळ वजाती", href: "/one-time-deduction", hidden: true },
+      { key: "salary-increment", label: "Employee Salary Increment", dv: "कर्मचारी विविध वेतनवाढ", href: "/salary-increment", hidden: true },
       { key: "leave-balance", label: "Leave Balance Correction", dv: "शिल्लक रजा दुरुस्ती", href: "/leave-balance" },
       { key: "allowance", label: "Assign Allowances", dv: "भत्ते लागू करणे", href: "/allowance" },
       { key: "deduction", label: "Assign Deductions", dv: "कपात लागू करणे", href: "/deduction" },
-      { key: "upload-allowances-deductions", label: "Upload Allowances & Deductions", dv: "Upload Allowances and Deductions", href: "/upload-allowances-deductions" },
+      { key: "upload-allowances-deductions", label: "Upload Allowances & Deductions", dv: "Upload Allowances and Deductions", href: "/upload-allowances-deductions", hidden: true },
       { key: "da-arrears", label: "Dearness Allowance (DA) Arrear", dv: "महागाई भत्ता फरक", href: "/da-arrears" },
-      { key: "retired-da-arrear", label: "Retired Employee DA Arrear", dv: "सेवानिवृत्तांना महागाई भत्ता फरक", href: "/retired-da-arrear" },
-      { key: "hra", label: "House Rent Allowance (HRA)", dv: "घरभाडे", href: "/hra" },
-      { key: "gis-correction", label: "GIS Number Correction", dv: "जी.आय.एस. क्रमांक दुरुस्त करणे", href: "/gis-correction" },
-      { key: "board-id-arrears", label: "Board ID Card Previous Arrears", dv: "मंडळ ओळखपत्र मागील थकबाकी", href: "/board-id-arrears" },
-      { key: "loan-installment", label: "Loan Installment Modification", dv: "कर्ज हप्ते बदल", href: "/loan-installment" },
+      { key: "retired-da-arrear", label: "Retired Employee DA Arrear", dv: "सेवानिवृत्तांना महागाई भत्ता फरक", href: "/retired-da-arrear", hidden: true },
+      { key: "hra", label: "House Rent Allowance (HRA)", dv: "घरभाडे", href: "/hra", hidden: true },
+      { key: "gis-correction", label: "GIS Number Correction", dv: "जी.आय.एस. क्रमांक दुरुस्त करणे", href: "/gis-correction", hidden: true },
+      { key: "board-id-arrears", label: "Board ID Card Previous Arrears", dv: "मंडळ ओळखपत्र मागील थकबाकी", href: "/board-id-arrears", hidden: true },
+      { key: "loan-installment", label: "Loan Installment Modification", dv: "कर्ज हप्ते बदल", href: "/loan-installment", hidden: true },
       { key: "income-tax", label: "Income Tax Forecast", dv: "आयकर पूर्वानुमान", href: "/income-tax" },
-      { key: "lpc", label: "Last Pay Certificate (LPC)", dv: "LPC", href: "/lpc" },
-      { key: "auto-increment-installment", label: "Automatic Increment Installment", dv: "Increase Installment Auto", href: "/auto-increment-installment" },
-      { key: "retired-deputation", label: "Retired / Deputation", dv: "Retired / Deputation", href: "/retired-deputation" },
-      { key: "grade-pay-arrear", label: "Grade Pay Arrear", dv: "Grade Pay Arrear", href: "/grade-pay-arrear" },
+      { key: "lpc", label: "Last Pay Certificate (LPC)", dv: "LPC", href: "/lpc", hidden: true },
+      { key: "auto-increment-installment", label: "Automatic Increment Installment", dv: "Increase Installment Auto", href: "/auto-increment-installment", hidden: true },
+      { key: "retired-deputation", label: "Retired / Deputation", dv: "Retired / Deputation", href: "/retired-deputation", hidden: true },
+      { key: "grade-pay-arrear", label: "Grade Pay Arrear", dv: "Grade Pay Arrear", href: "/grade-pay-arrear", hidden: true },
     ],
   },
   {
@@ -110,28 +114,28 @@ export const NAV: NavMenu[] = [
     dv: "अहवाल (इंक-जेट प्रिंट)",
     icon: "printer",
     children: [
-      { key: "ij-salary-bill", label: "Salary Bill", dv: "बिल", href: "/ij-salary-bill" },
+      { key: "ij-salary-bill", label: "Salary Bill", dv: "बिल", href: "/ij-salary-bill", hidden: true },
       { key: "ij-pay-slip", label: "Pay Slip", dv: "पगार पत्र", href: "/ij-pay-slip" },
-      { key: "ij-survey-allowance", label: "Survey Allowance Report", dv: "सर्वे भत्ता अहवाल", href: "/ij-survey-allowance" },
-      { key: "ij-bank-account-details", label: "Bank Account Details", dv: "बँक खाते विवरण", href: "/ij-bank-account-details" },
-      { key: "ij-employee-leave-info", label: "Employee Leave Information", dv: "कर्मचारी सुट्टी माहिती", href: "/ij-employee-leave-info" },
-      { key: "ij-annual-increment-report", label: "Annual Salary Increment Report", dv: "वार्षिक वेतनवाढ अहवाल", href: "/ij-annual-increment-report" },
-      { key: "ij-bank-society-deduction-report", label: "Bank & Cooperative Society Deduction Report", dv: "बँक व सभागृह अनुदान", href: "/ij-bank-society-deduction-report" },
-      { key: "ij-income-tax-statement", label: "Income Tax Statement", dv: "Income Tax Statement", href: "/ij-income-tax-statement" },
-      { key: "ij-payroll-register", label: "Payroll Register Report", dv: "प्रचलन पत्रक अहवाल", href: "/ij-payroll-register" },
-      { key: "ij-attendance-report", label: "Attendance Report", dv: "उपस्थिती अहवाल", href: "/ij-attendance-report" },
-      { key: "ij-pension-verification", label: "Pension Verification Report", dv: "पेन्शन तपासणी यादी", href: "/ij-pension-verification" },
-      { key: "ij-dept-salary-verification", label: "Department-wise Salary Verification", dv: "विभागानुसार वेतन तपासणी", href: "/ij-dept-salary-verification" },
-      { key: "ij-dept-arrear-verification", label: "Department-wise Arrear Verification", dv: "विभागानुसार बकाया तपासणी", href: "/ij-dept-arrear-verification" },
-      { key: "ij-recovery-list", label: "Recovery List", dv: "बजावी वसूली यादी", href: "/ij-recovery-list" },
-      { key: "ij-salary-slip-report", label: "Salary Slip Report", dv: "पगार स्लीप अहवाल", href: "/ij-salary-slip-report" },
+      { key: "ij-survey-allowance", label: "Survey Allowance Report", dv: "सर्वे भत्ता अहवाल", href: "/ij-survey-allowance", hidden: true },
+      { key: "ij-bank-account-details", label: "Bank Account Details", dv: "बँक खाते विवरण", href: "/ij-bank-account-details", hidden: true },
+      { key: "ij-employee-leave-info", label: "Employee Leave Information", dv: "कर्मचारी सुट्टी माहिती", href: "/ij-employee-leave-info", hidden: true },
+      { key: "ij-annual-increment-report", label: "Annual Salary Increment Report", dv: "वार्षिक वेतनवाढ अहवाल", href: "/ij-annual-increment-report", hidden: true },
+      { key: "ij-bank-society-deduction-report", label: "Bank & Cooperative Society Deduction Report", dv: "बँक व सभागृह अनुदान", href: "/ij-bank-society-deduction-report", hidden: true },
+      { key: "ij-income-tax-statement", label: "Income Tax Statement", dv: "Income Tax Statement", href: "/ij-income-tax-statement", hidden: true },
+      { key: "ij-payroll-register", label: "Payroll Register Report", dv: "प्रचलन पत्रक अहवाल", href: "/ij-payroll-register", hidden: true },
+      { key: "ij-attendance-report", label: "Attendance Report", dv: "उपस्थिती अहवाल", href: "/ij-attendance-report", hidden: true },
+      { key: "ij-pension-verification", label: "Pension Verification Report", dv: "पेन्शन तपासणी यादी", href: "/ij-pension-verification", hidden: true },
+      { key: "ij-dept-salary-verification", label: "Department-wise Salary Verification", dv: "विभागानुसार वेतन तपासणी", href: "/ij-dept-salary-verification", hidden: true },
+      { key: "ij-dept-arrear-verification", label: "Department-wise Arrear Verification", dv: "विभागानुसार बकाया तपासणी", href: "/ij-dept-arrear-verification", hidden: true },
+      { key: "ij-recovery-list", label: "Recovery List", dv: "बजावी वसूली यादी", href: "/ij-recovery-list", hidden: true },
+      { key: "ij-salary-slip-report", label: "Salary Slip Report", dv: "पगार स्लीप अहवाल", href: "/ij-salary-slip-report", hidden: true },
       { key: "ij-all-deductions-report", label: "All Deductions Report", dv: "सर्व वजाती अहवाल", href: "/ij-all-deductions-report" },
-      { key: "ij-bank-bill-details", label: "Bank Bill Details", dv: "बँक बिल विवरण", href: "/ij-bank-bill-details" },
-      { key: "ij-gis-deduction-report", label: "GIS Deduction Report", dv: "GIS वजाती अहवाल", href: "/ij-gis-deduction-report" },
-      { key: "ij-maintenance-allowance-deduction-report", label: "Maintenance Allowance Deduction Report", dv: "देखभाल भत्ता वजाती अहवाल", href: "/ij-maintenance-allowance-deduction-report" },
-      { key: "ij-income-tax-forecast", label: "Income Tax Forecast", dv: "आयकर पूर्वानुमान", href: "/ij-income-tax-forecast" },
-      { key: "ij-form16-report", label: "Form 16 Report", dv: "Form 16 Report", href: "/ij-form16-report" },
-      { key: "ij-biometric-dashboard", label: "Biometric Dashboard", dv: "Biometric Dashboard", href: "/ij-biometric-dashboard" },
+      { key: "ij-bank-bill-details", label: "Bank Bill Details", dv: "बँक बिल विवरण", href: "/ij-bank-bill-details", hidden: true },
+      { key: "ij-gis-deduction-report", label: "GIS Deduction Report", dv: "GIS वजाती अहवाल", href: "/ij-gis-deduction-report", hidden: true },
+      { key: "ij-maintenance-allowance-deduction-report", label: "Maintenance Allowance Deduction Report", dv: "देखभाल भत्ता वजाती अहवाल", href: "/ij-maintenance-allowance-deduction-report", hidden: true },
+      { key: "ij-income-tax-forecast", label: "Income Tax Forecast", dv: "आयकर पूर्वानुमान", href: "/ij-income-tax-forecast", hidden: true },
+      { key: "ij-form16-report", label: "Form 16 Report", dv: "Form 16 Report", href: "/ij-form16-report", hidden: true },
+      { key: "ij-biometric-dashboard", label: "Biometric Dashboard", dv: "Biometric Dashboard", href: "/ij-biometric-dashboard", hidden: true },
     ],
   },
   {
@@ -168,6 +172,8 @@ export const NAV: NavMenu[] = [
     ],
   },
   {
+    // No screens in this menu are built yet — hidden from the UI, routes/data stay intact.
+    hidden: true,
     key: "remuneration",
     label: "Remuneration",
     dv: "मानधन",
@@ -201,17 +207,27 @@ export function findByKey(key: string) {
 
 export type ResolvedRoute = {
   title: string;
+  titleDv: string;
   group: string;
+  groupDv: string;
   icon: string;
 };
 
 /** Resolve a URL key to a leaf screen, or a childless top menu. */
 export function findRoute(key: string): ResolvedRoute | undefined {
   const leaf = LEAF_BY_KEY[key];
-  if (leaf) return { title: leaf.item.label, group: leaf.menu.label, icon: leaf.menu.icon };
+  if (leaf) {
+    return {
+      title: leaf.item.label,
+      titleDv: leaf.item.dv,
+      group: leaf.menu.label,
+      groupDv: leaf.menu.dv,
+      icon: leaf.menu.icon,
+    };
+  }
   const menu = MENU_BY_KEY[key];
   if (menu && menu.children.length === 0) {
-    return { title: menu.label, group: menu.label, icon: menu.icon };
+    return { title: menu.label, titleDv: menu.dv, group: menu.label, groupDv: menu.dv, icon: menu.icon };
   }
   return undefined;
 }

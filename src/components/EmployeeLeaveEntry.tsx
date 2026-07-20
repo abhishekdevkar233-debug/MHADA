@@ -2,6 +2,7 @@
 
 import { useMemo, useRef, useState } from "react";
 import Icon from "@/components/Icon";
+import PageHeader from "@/components/PageHeader";
 import { DateField, SelectField, Toast } from "@/components/form/Field";
 import EmployeeSearchCard from "@/components/EmployeeSearchCard";
 import StatusBadge from "@/components/StatusBadge";
@@ -131,16 +132,11 @@ export default function EmployeeLeaveEntry() {
 
   return (
     <div className="mx-auto max-w-6xl">
-      <div className="mb-6">
-        <div className="inline-flex items-center gap-1.5 rounded-full bg-border-soft px-3 py-1 text-[11.5px] font-medium text-muted-2">
-          Setup <span>›</span> <span className="text-accent-dark">Employee Leave Information</span>
-        </div>
-        <h1 className="disp mt-3 text-[22px] font-semibold text-ink">Employee Leave Entry</h1>
-        <p className="mt-1.5 max-w-2xl text-[13.5px] leading-relaxed text-muted">
-          Search for an employee and record a new leave entry against their
-          available balance.
-        </p>
-      </div>
+      <PageHeader
+        routeKey="leave-setup"
+        title="Employee Leave Entry"
+        subtitle="Search for an employee and record a new leave entry against their available balance."
+      />
 
       <div className="rounded-xl border border-border bg-surface p-4 shadow-[0_1px_2px_rgba(22,35,28,0.04)] sm:p-6">
         <EmployeeSearchCard employee={employee} onSelect={handleSelectEmployee} required />

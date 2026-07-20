@@ -1,13 +1,18 @@
+"use client";
+
 import Link from "next/link";
 import { NAV } from "@/lib/nav";
 import Icon from "@/components/Icon";
+import { useLang } from "@/lib/i18n";
 
 export default function DashboardPage() {
+  const { lang } = useLang();
+
   return (
     <div className="mx-auto max-w-6xl">
       <div className="mb-6">
         <div className="inline-flex items-center gap-1.5 rounded-full bg-border-soft px-3 py-1 text-[11.5px] font-medium text-muted-2">
-          Home
+          {lang === "mr" ? "मुख्यपृष्ठ" : "Home"}
         </div>
         <h1 className="disp mt-3 text-[22px] font-semibold text-ink">
           Welcome, Mumbai Division
@@ -20,9 +25,10 @@ export default function DashboardPage() {
       </div>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {NAV.filter((menu) => !menu.hidden).map((menu) => {
-          const href = menu.children[0]?.href ?? `/${menu.key}`;
-          const count = menu.children.length;
+        {NAV.filter((menu) => !menu.hidden && (menu.children.length === 0 || menu.children.some((c) => !c.hidden))).map((menu) => {
+          const visible = menu.children.filter((c) => !c.hidden);
+          const href = visible[0]?.href ?? `/${menu.key}`;
+          const count = visible.length;
           return (
             <Link
               key={menu.key}
@@ -32,7 +38,9 @@ export default function DashboardPage() {
               <span className="flex h-11 w-11 items-center justify-center rounded-[10px] bg-primary-tint text-primary transition-colors group-hover:bg-primary group-hover:text-white">
                 <Icon name={menu.icon} className="h-5 w-5" />
               </span>
-              <div className="mt-3 text-[14px] font-semibold text-ink">{menu.label}</div>
+              <div className={`mt-3 text-[14px] font-semibold text-ink ${lang === "mr" ? "dv" : ""}`}>
+                {lang === "mr" ? menu.dv : menu.label}
+              </div>
               <div className="mt-1 text-[11.5px] text-muted-2">
                 {count > 0
                   ? `${count} ${count === 1 ? "screen" : "screens"}`

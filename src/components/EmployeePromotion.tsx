@@ -2,6 +2,7 @@
 
 import { useMemo, useRef, useState } from "react";
 import Icon from "@/components/Icon";
+import PageHeader from "@/components/PageHeader";
 import { SectionTitle, TextField, DateField, SelectField, Toast } from "@/components/form/Field";
 import EmployeeSearchCard from "@/components/EmployeeSearchCard";
 import DataTablePagination from "@/components/DataTablePagination";
@@ -125,16 +126,10 @@ export default function EmployeePromotion() {
 
   return (
     <div className="mx-auto max-w-6xl">
-      <div className="mb-6">
-        <div className="inline-flex items-center gap-1.5 rounded-full bg-border-soft px-3 py-1 text-[11.5px] font-medium text-muted-2">
-          Administration Setup <span>›</span> <span className="text-accent-dark">Employee Promotion Information</span>
-        </div>
-        <h1 className="disp mt-3 text-[22px] font-semibold text-ink">Employee Promotion Information</h1>
-        <p className="mt-1.5 max-w-2xl text-[13.5px] leading-relaxed text-muted">
-          Search for an employee, review their current posting, and record a
-          transfer to a new department, division, or office.
-        </p>
-      </div>
+      <PageHeader
+        routeKey="employee-promotion"
+        subtitle="Search for an employee, review their current posting, and record a transfer to a new department, division, or office."
+      />
 
       <div className="rounded-xl border border-border bg-surface p-4 shadow-[0_1px_2px_rgba(22,35,28,0.04)] sm:p-6">
         <SectionTitle>Employee</SectionTitle>

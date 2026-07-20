@@ -2,6 +2,7 @@
 
 import { useRef, useState } from "react";
 import Icon from "@/components/Icon";
+import PageHeader from "@/components/PageHeader";
 import {
   Label,
   TextField,
@@ -134,16 +135,11 @@ export default function EmployeeRecords() {
   return (
     <div className="mx-auto max-w-6xl">
       <div className="mb-6 flex flex-wrap items-start justify-between gap-3">
-        <div>
-          <div className="inline-flex items-center gap-1.5 rounded-full bg-border-soft px-3 py-1 text-[11.5px] font-medium text-muted-2">
-            Setup <span>›</span> <span className="text-accent-dark">Employee Information Correction</span>
-          </div>
-          <h1 className="disp mt-3 text-[22px] font-semibold text-ink">Employee Information Correction</h1>
-          <p className="mt-1.5 max-w-2xl text-[13.5px] leading-relaxed text-muted">
-            Add a new employee or update an existing service record across five
-            sections of the service book.
-          </p>
-        </div>
+        <PageHeader
+          routeKey="employee-records"
+          subtitle="Add a new employee or update an existing service record across five sections of the service book."
+          bare
+        />
         {mode === "list" && (
           <button
             type="button"

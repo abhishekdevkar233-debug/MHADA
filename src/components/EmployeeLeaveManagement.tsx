@@ -2,6 +2,7 @@
 
 import { useMemo, useRef, useState } from "react";
 import Icon from "@/components/Icon";
+import PageHeader from "@/components/PageHeader";
 import {
   SectionTitle,
   TextField,
@@ -132,16 +133,11 @@ export default function EmployeeLeaveManagement() {
   return (
     <div className="mx-auto max-w-5xl">
       <div className="mb-6 flex flex-wrap items-start justify-between gap-3">
-        <div>
-          <div className="inline-flex items-center gap-1.5 rounded-full bg-border-soft px-3 py-1 text-[11.5px] font-medium text-muted-2">
-            Operations <span>›</span> <span className="text-accent-dark">Employee Leave Management</span>
-          </div>
-          <h1 className="disp mt-3 text-[22px] font-semibold text-ink">Employee Leave Management</h1>
-          <p className="mt-1.5 max-w-2xl text-[13.5px] leading-relaxed text-muted">
-            Record a leave request, sanction it, and log the order reference —
-            all in one place.
-          </p>
-        </div>
+        <PageHeader
+          routeKey="employee-leave"
+          subtitle="Record a leave request, sanction it, and log the order reference — all in one place."
+          bare
+        />
         <span className={`inline-flex items-center rounded-full px-3 py-1 text-[12px] font-semibold ${statusBadgeCls(status)}`}>
           {status}
         </span>

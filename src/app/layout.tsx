@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Poppins, Inter, IBM_Plex_Mono, Noto_Sans_Devanagari } from "next/font/google";
+import { LangProvider } from "@/lib/i18n";
 import "./globals.css";
 
 const poppins = Poppins({
@@ -43,7 +44,7 @@ export default function RootLayout({
       className={`${poppins.variable} ${inter.variable} ${plexMono.variable} ${notoDevanagari.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-canvas font-sans text-ink">
-        {children}
+        <LangProvider>{children}</LangProvider>
       </body>
     </html>
   );

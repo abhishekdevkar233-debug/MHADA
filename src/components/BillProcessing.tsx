@@ -2,6 +2,7 @@
 
 import { useMemo, useRef, useState } from "react";
 import Icon from "@/components/Icon";
+import PageHeader from "@/components/PageHeader";
 import { Toast } from "@/components/form/Field";
 import SearchableSelect from "@/components/SearchableSelect";
 import { EMPLOYEE_DIRECTORY } from "@/lib/employee-directory";
@@ -101,15 +102,12 @@ export default function BillProcessing() {
 
   return (
     <div className="mx-auto max-w-6xl">
-      <div className="mb-6">
-        <div className="inline-flex items-center gap-1.5 rounded-full bg-border-soft px-3 py-1 text-[11.5px] font-medium text-muted-2">
-          Payroll Process <span>›</span> <span className="text-accent-dark">Bill Processing</span>
-        </div>
-        <h1 className="disp mt-3 text-[22px] font-semibold text-ink">Bill Processing</h1>
-        <p className="mt-1 text-[13.5px] text-muted">
-          Process an existing payroll bill and generate the final payroll output.
-        </p>
-      </div>
+      <PageHeader
+        routeKey="bill-process"
+        group="Payroll Process"
+        title="Bill Processing"
+        subtitle="Process an existing payroll bill and generate the final payroll output."
+      />
 
       {/* Bill Selection Card */}
       <div className="mb-5 rounded-xl border border-border bg-surface p-5 shadow-[0_1px_2px_rgba(22,35,28,0.04)]">

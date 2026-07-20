@@ -2,6 +2,7 @@
 
 import { useMemo, useRef, useState } from "react";
 import Icon from "@/components/Icon";
+import PageHeader from "@/components/PageHeader";
 import { SectionTitle, TextAreaField, Toast } from "@/components/form/Field";
 import EmployeeSearchCard from "@/components/EmployeeSearchCard";
 import type { DirectoryEmployee } from "@/lib/employee-directory";
@@ -64,16 +65,10 @@ export default function LeaveBalanceCorrection() {
 
   return (
     <div className="mx-auto max-w-5xl">
-      <div className="mb-6">
-        <div className="inline-flex items-center gap-1.5 rounded-full bg-border-soft px-3 py-1 text-[11.5px] font-medium text-muted-2">
-          Operations <span>›</span> <span className="text-accent-dark">Leave Balance Correction</span>
-        </div>
-        <h1 className="disp mt-3 text-[22px] font-semibold text-ink">Leave Balance Correction</h1>
-        <p className="mt-1.5 max-w-2xl text-[13.5px] leading-relaxed text-muted">
-          Search for an employee and correct their recorded leave balance across
-          all leave types on file.
-        </p>
-      </div>
+      <PageHeader
+        routeKey="leave-balance"
+        subtitle="Search for an employee and correct their recorded leave balance across all leave types on file."
+      />
 
       <div className="mb-5">
         <EmployeeSearchCard employee={employee} onSelect={handleSelect} required />
