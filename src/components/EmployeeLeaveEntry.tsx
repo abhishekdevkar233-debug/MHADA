@@ -139,9 +139,9 @@ export default function EmployeeLeaveEntry() {
       />
 
       <div className="rounded-xl border border-border bg-surface p-4 shadow-[0_1px_2px_rgba(22,35,28,0.04)] sm:p-6">
-        <EmployeeSearchCard employee={employee} onSelect={handleSelectEmployee} required />
+        <EmployeeSearchCard employee={employee} onSelect={handleSelectEmployee} />
 
-        <div className={`mt-6 grid grid-cols-1 gap-6 lg:grid-cols-[1fr_260px] ${employee ? "" : "pointer-events-none opacity-40"}`}>
+        <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-[1fr_260px]">
           {/* Form */}
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <SelectField label="Leave Type" required options={LEAVE_TYPES} value={leaveType} onChange={setLeaveType} />

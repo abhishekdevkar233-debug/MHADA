@@ -7,6 +7,9 @@
  * spacing, and validation styling.
  */
 
+import { useState } from "react";
+import DatePicker from "@/components/DatePicker";
+
 export const inputCls =
   "w-full rounded-[9px] border-[1.5px] border-border bg-white px-3 py-2.5 text-[13.5px] text-ink outline-none transition-colors focus:border-primary disabled:bg-border-soft disabled:text-muted";
 
@@ -125,18 +128,19 @@ export function DateField({
   disabled?: boolean;
   error?: string;
 }) {
-  const props = onChange
-    ? { value: value ?? "", onChange: (e: React.ChangeEvent<HTMLInputElement>) => onChange(e.target.value) }
-    : { defaultValue };
+  const [internal, setInternal] = useState(defaultValue ?? "");
+  const isControlled = onChange !== undefined;
+  const current = isControlled ? (value ?? "") : internal;
+
   return (
     <div>
       <Label required={required}>{label}</Label>
-      <input
-        type="date"
-        className={`${inputCls} ${error ? "border-danger" : ""}`}
+      <DatePicker
+        value={current}
+        onChange={isControlled ? onChange! : setInternal}
         min={min}
         disabled={disabled}
-        {...props}
+        error={error}
       />
       {error && <p className="mt-1 text-[11.5px] font-medium text-danger">{error}</p>}
     </div>

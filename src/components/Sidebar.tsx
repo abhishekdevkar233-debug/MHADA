@@ -32,29 +32,21 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
   const pathname = usePathname();
   const { lang } = useLang();
   const activeKey = activeMenuKey(pathname);
-  const [expanded, setExpanded] = useState<Set<string>>(
-    () => new Set(activeKey ? [activeKey] : []),
-  );
+  // Accordion: only one submenu open at a time.
+  const [expandedKey, setExpandedKey] = useState<string | null>(activeKey);
 
   // Keep the menu that owns the current route expanded on navigation, without
   // an effect — adjust state during render when the active route changes.
   const [prevActive, setPrevActive] = useState(activeKey);
   if (activeKey !== prevActive) {
     setPrevActive(activeKey);
-    if (activeKey && !expanded.has(activeKey)) {
-      const next = new Set(expanded);
-      next.add(activeKey);
-      setExpanded(next);
+    if (activeKey && activeKey !== expandedKey) {
+      setExpandedKey(activeKey);
     }
   }
 
   function toggle(key: string) {
-    setExpanded((prev) => {
-      const next = new Set(prev);
-      if (next.has(key)) next.delete(key);
-      else next.add(key);
-      return next;
-    });
+    setExpandedKey((prev) => (prev === key ? null : key));
   }
 
   return (
@@ -137,7 +129,7 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
               );
             }
 
-            const isOpen = expanded.has(menu.key);
+            const isOpen = expandedKey === menu.key;
             return (
               <div key={menu.key} className="mb-0.5">
                 <button
@@ -159,41 +151,47 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
                   </span>
                   <Icon
                     name="chevron"
-                    className={`h-3.5 w-3.5 flex-shrink-0 text-white/45 transition-transform ${
+                    className={`h-3.5 w-3.5 flex-shrink-0 text-white/45 transition-transform duration-200 ${
                       isOpen ? "rotate-90" : ""
                     }`}
                   />
                 </button>
 
-                {isOpen && (
-                  <div className="mt-0.5 mb-1 space-y-0.5 pl-3">
-                    {children.map((item) => {
-                      const active = pathname === item.href;
-                      return (
-                        <Link
-                          key={item.key}
-                          href={item.href}
-                          onClick={onClose}
-                          aria-current={active ? "page" : undefined}
-                          className={`flex items-center gap-2 rounded-[7px] py-1.5 pr-2 pl-3 text-[12.5px] transition-colors ${
-                            active
-                              ? "bg-accent font-medium text-white"
-                              : "text-white/70 hover:bg-white/8 hover:text-white"
-                          }`}
-                        >
-                          <span
-                            className={`h-1.5 w-1.5 flex-shrink-0 rounded-full ${
-                              active ? "bg-white" : "bg-white/30"
+                <div
+                  className={`grid transition-[grid-template-rows] duration-200 ease-out ${
+                    isOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
+                  }`}
+                >
+                  <div className="overflow-hidden">
+                    <div className="mt-0.5 mb-1 space-y-0.5 pl-3">
+                      {children.map((item) => {
+                        const active = pathname === item.href;
+                        return (
+                          <Link
+                            key={item.key}
+                            href={item.href}
+                            onClick={onClose}
+                            aria-current={active ? "page" : undefined}
+                            className={`flex items-center gap-2 rounded-[7px] py-1.5 pr-2 pl-3 text-[12.5px] transition-colors ${
+                              active
+                                ? "bg-accent font-medium text-white"
+                                : "text-white/70 hover:bg-white/8 hover:text-white"
                             }`}
-                          />
-                          <span className={`min-w-0 flex-1 truncate ${lang === "mr" ? "dv" : ""}`}>
-                            {lang === "mr" ? item.dv : item.label}
-                          </span>
-                        </Link>
-                      );
-                    })}
+                          >
+                            <span
+                              className={`h-1.5 w-1.5 flex-shrink-0 rounded-full ${
+                                active ? "bg-white" : "bg-white/30"
+                              }`}
+                            />
+                            <span className={`min-w-0 flex-1 truncate ${lang === "mr" ? "dv" : ""}`}>
+                              {lang === "mr" ? item.dv : item.label}
+                            </span>
+                          </Link>
+                        );
+                      })}
+                    </div>
                   </div>
-                )}
+                </div>
               </div>
             );
           })}

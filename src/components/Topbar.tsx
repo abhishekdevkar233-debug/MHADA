@@ -1,11 +1,36 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { findRoute } from "@/lib/nav";
 import Icon from "@/components/Icon";
 import { Label, Toast } from "@/components/form/Field";
 import { useLang } from "@/lib/i18n";
+
+type NotificationItem = {
+  id: string;
+  icon: string;
+  title: string;
+  detail: string;
+  time: string;
+  tone: "primary" | "success" | "warning" | "danger";
+};
+
+const NOTIFICATIONS: NotificationItem[] = [
+  { id: "n1", icon: "bill-process", title: "Bill Processing complete", detail: "BILL/2026/0417 — 564 employees processed.", time: "10 min ago", tone: "success" },
+  { id: "n2", icon: "employee", title: "Leave request pending", detail: "Kalpana Nandan Pawar requested Casual Leave.", time: "42 min ago", tone: "warning" },
+  { id: "n3", icon: "bill-create", title: "Salary Bill generated", detail: "BILL/2026/0417 for June 2026 is ready for review.", time: "1 hr ago", tone: "primary" },
+  { id: "n4", icon: "bell", title: "Payroll deadline approaching", detail: "June 2026 payroll must be finalized by 25 Jul.", time: "3 hrs ago", tone: "danger" },
+  { id: "n5", icon: "shield", title: "System announcement", detail: "Scheduled maintenance window on 21 Jul, 11 PM–1 AM.", time: "1 day ago", tone: "primary" },
+];
+
+const NOTIFICATION_TONE_CLS: Record<NotificationItem["tone"], string> = {
+  primary: "bg-primary-tint text-primary",
+  success: "bg-success-tint text-success",
+  warning: "bg-warning-tint text-warning",
+  danger: "bg-danger/10 text-danger",
+};
 
 type TopbarProps = {
   onMenuOpen: () => void;
@@ -90,16 +115,7 @@ export default function Topbar({ onMenuOpen }: TopbarProps) {
           >
             <Icon name="help" className="h-[18px] w-[18px]" />
           </button>
-          <button
-            type="button"
-            aria-label="Notifications"
-            className="relative flex h-9 w-9 items-center justify-center rounded-lg text-muted hover:bg-canvas hover:text-ink"
-          >
-            <Icon name="bell" className="h-[18px] w-[18px]" />
-            <span className="absolute top-1.5 right-2 flex h-4 min-w-4 items-center justify-center rounded-full bg-accent px-1 text-[9px] font-bold text-white">
-              3
-            </span>
-          </button>
+          <NotificationBell />
 
           <span className="mx-1 hidden h-8 w-px bg-border sm:block" />
 
@@ -169,6 +185,80 @@ function LanguageToggle({ lang, onChange }: { lang: "en" | "mr"; onChange: (lang
       >
         मराठी
       </button>
+    </div>
+  );
+}
+
+function NotificationBell() {
+  const [open, setOpen] = useState(false);
+  const rootRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!open) return;
+    function handlePointerDown(e: PointerEvent) {
+      if (rootRef.current && !rootRef.current.contains(e.target as Node)) setOpen(false);
+    }
+    function handleKey(e: KeyboardEvent) {
+      if (e.key === "Escape") setOpen(false);
+    }
+    document.addEventListener("pointerdown", handlePointerDown);
+    document.addEventListener("keydown", handleKey);
+    return () => {
+      document.removeEventListener("pointerdown", handlePointerDown);
+      document.removeEventListener("keydown", handleKey);
+    };
+  }, [open]);
+
+  return (
+    <div ref={rootRef} className="relative">
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        aria-label="Notifications"
+        aria-expanded={open}
+        className="relative flex h-9 w-9 items-center justify-center rounded-lg text-muted transition-colors hover:bg-canvas hover:text-ink"
+      >
+        <Icon name="bell" className="h-[18px] w-[18px]" />
+        <span className="absolute top-1.5 right-2 flex h-4 min-w-4 items-center justify-center rounded-full bg-accent px-1 text-[9px] font-bold text-white">
+          {NOTIFICATIONS.length}
+        </span>
+      </button>
+
+      <div
+        className={`absolute top-full right-0 z-30 mt-2 w-[340px] origin-top-right rounded-xl border border-border bg-surface shadow-[0_20px_45px_-15px_rgba(22,35,28,0.35)] transition-all duration-150 ${
+          open ? "translate-y-0 scale-100 opacity-100" : "pointer-events-none -translate-y-1 scale-95 opacity-0"
+        }`}
+      >
+        <div className="flex items-center justify-between border-b border-border-soft px-4 py-3">
+          <h3 className="text-[13.5px] font-semibold text-ink">Notifications</h3>
+          <span className="rounded-full bg-primary-tint px-2 py-0.5 text-[11px] font-semibold text-primary">
+            {NOTIFICATIONS.length} new
+          </span>
+        </div>
+
+        <div className="max-h-[360px] overflow-y-auto">
+          {NOTIFICATIONS.map((n) => (
+            <div key={n.id} className="flex items-start gap-3 border-b border-border-soft px-4 py-3 last:border-0 hover:bg-canvas">
+              <span className={`flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full ${NOTIFICATION_TONE_CLS[n.tone]}`}>
+                <Icon name={n.icon} className="h-4 w-4" />
+              </span>
+              <div className="min-w-0 flex-1">
+                <div className="text-[12.5px] font-semibold text-ink">{n.title}</div>
+                <div className="mt-0.5 text-[12px] leading-snug text-muted">{n.detail}</div>
+                <div className="mt-1 text-[11px] text-muted-2">{n.time}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <Link
+          href="#"
+          onClick={() => setOpen(false)}
+          className="block border-t border-border-soft px-4 py-2.5 text-center text-[12.5px] font-semibold text-primary hover:bg-primary-tint/60"
+        >
+          View All Notifications
+        </Link>
+      </div>
     </div>
   );
 }

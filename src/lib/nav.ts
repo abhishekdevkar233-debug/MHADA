@@ -30,6 +30,13 @@ export type NavMenu = {
  */
 export const NAV: NavMenu[] = [
   {
+    key: "dashboard",
+    label: "Dashboard",
+    dv: "डॅशबोर्ड",
+    icon: "dashboard",
+    children: [],
+  },
+  {
     // No screens in this menu are built yet — hidden from the UI, routes/data stay intact.
     hidden: true,
     key: "user",
