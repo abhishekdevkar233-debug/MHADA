@@ -101,7 +101,7 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
 
         {/* Nav — 8 top-level menus */}
         <nav className="flex-1 overflow-y-auto px-3 py-3" aria-label="Primary">
-          {NAV.map((menu) => {
+          {NAV.filter((menu) => !menu.hidden).map((menu) => {
             const isActiveMenu = menu.key === activeKey;
 
             // Childless top menu (e.g. Remuneration) renders as a direct link.

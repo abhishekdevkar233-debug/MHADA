@@ -83,7 +83,7 @@ export default function LeaveBalanceCorrection() {
         <div className="rounded-xl border border-border bg-surface p-4 sm:p-5">
           <SectionTitle>Leave Balances</SectionTitle>
 
-          <div className="overflow-hidden rounded-[10px] border border-border">
+          <div className="overflow-hidden rounded-xl border border-border">
             <table className="w-full text-[13px]">
               <thead>
                 <tr className="border-b border-border-soft bg-border-soft/60">

@@ -123,7 +123,7 @@ export default function LoginPage() {
             }}
           />
           <div className="relative">
-            <div className="inline-flex items-center rounded-[14px] bg-white px-4 py-3 shadow-[0_8px_20px_rgba(0,0,0,0.18)]">
+            <div className="inline-flex items-center rounded-xl bg-white px-4 py-3 shadow-[0_8px_20px_rgba(0,0,0,0.18)]">
               <Image
                 src="/mhada-logo.png"
                 alt="MHADA — Maharashtra Housing and Area Development Authority"
@@ -247,7 +247,7 @@ export default function LoginPage() {
       <div
         role="status"
         aria-live="polite"
-        className={`fixed bottom-6 left-1/2 z-50 flex -translate-x-1/2 items-center gap-2.5 rounded-[10px] bg-ink px-[22px] py-[13px] text-[13.5px] font-medium text-white shadow-[0_12px_30px_rgba(0,0,0,0.25)] transition-all duration-300 ${
+        className={`fixed bottom-6 left-1/2 z-50 flex -translate-x-1/2 items-center gap-2.5 rounded-xl bg-ink px-[22px] py-[13px] text-[13.5px] font-medium text-white shadow-[0_12px_30px_rgba(0,0,0,0.25)] transition-all duration-300 ${
           toast
             ? "translate-y-0 opacity-100"
             : "pointer-events-none translate-y-5 opacity-0"

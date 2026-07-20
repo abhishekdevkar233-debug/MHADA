@@ -20,7 +20,7 @@ export default function DashboardPage() {
       </div>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {NAV.map((menu) => {
+        {NAV.filter((menu) => !menu.hidden).map((menu) => {
           const href = menu.children[0]?.href ?? `/${menu.key}`;
           const count = menu.children.length;
           return (

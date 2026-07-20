@@ -11,6 +11,8 @@ export type NavMenu = {
   dv: string;
   icon: string;
   children: NavLeaf[];
+  /** Temporarily hidden from the sidebar/dashboard UI, but routes and data stay intact. */
+  hidden?: boolean;
 };
 
 /**
@@ -134,6 +136,8 @@ export const NAV: NavMenu[] = [
   },
   {
     // Mirrors Reports — Ink-Jet 1:1 (same reports, Dot-Matrix print driver).
+    // Temporarily hidden from the UI per client request — code/routes stay intact.
+    hidden: true,
     key: "report-dotmatrix",
     label: "Reports — Dot-Matrix",
     dv: "अहवाल (डॉट-मॅट्रिक्स प्रिंट)",

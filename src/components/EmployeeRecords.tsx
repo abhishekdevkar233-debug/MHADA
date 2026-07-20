@@ -188,18 +188,18 @@ function StatCard({
 }: {
   label: string;
   value: number;
-  tone: "primary" | "success" | "accent";
+  tone: "primary" | "success" | "warning";
   icon: string;
 }) {
   const toneCls =
     tone === "success"
-      ? "bg-primary-tint text-primary"
-      : tone === "accent"
-        ? "bg-accent-tint text-accent-dark"
+      ? "bg-success-tint text-success"
+      : tone === "warning"
+        ? "bg-warning-tint text-warning"
         : "bg-primary-tint text-primary";
   return (
     <div className="flex items-center gap-3 rounded-xl border border-border bg-surface px-4 py-3.5">
-      <span className={`flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-[10px] ${toneCls}`}>
+      <span className={`flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl ${toneCls}`}>
         <Icon name={icon} className="h-5 w-5" />
       </span>
       <div>
@@ -263,7 +263,7 @@ function ListView({
       <div className="mb-4 grid grid-cols-1 gap-3 sm:grid-cols-3">
         <StatCard label="Total Employees" value={total} tone="primary" icon="employee" />
         <StatCard label="Filled Up" value={filledUp} tone="success" icon="attendance" />
-        <StatCard label="Pending" value={pending} tone="accent" icon="bell" />
+        <StatCard label="Pending" value={pending} tone="warning" icon="bell" />
       </div>
 
       {/* Filter bar */}
@@ -755,7 +755,7 @@ function StepLanguagesEducation({ hidden }: { hidden: boolean }) {
       <div className="mt-6">
         <Label>Photograph</Label>
         <div className="flex flex-wrap items-start gap-5">
-          <div className="flex h-28 w-28 flex-shrink-0 flex-col items-center justify-center rounded-[10px] border-[1.5px] border-dashed border-border bg-border-soft text-center text-[11px] font-medium text-muted-2">
+          <div className="flex h-28 w-28 flex-shrink-0 flex-col items-center justify-center rounded-xl border-[1.5px] border-dashed border-border bg-border-soft text-center text-[11px] font-medium text-muted-2">
             NO IMAGE
             <br />
             AVAILABLE

@@ -168,15 +168,28 @@ export function SelectField({
   return (
     <div>
       <Label required={required}>{label}</Label>
-      <select className={inputCls} disabled={disabled} {...props}>
-        <option value="" disabled>
-          {placeholder}
-        </option>
-        {options.map((o) => (
-          <option key={o}>{o}</option>
-        ))}
-      </select>
+      <div className="relative">
+        <select className={`${inputCls} appearance-none pr-9`} disabled={disabled} {...props}>
+          <option value="" disabled>
+            {placeholder}
+          </option>
+          {options.map((o) => (
+            <option key={o}>{o}</option>
+          ))}
+        </select>
+        <span className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-muted-2">
+          <ChevronDownIcon />
+        </span>
+      </div>
     </div>
+  );
+}
+
+function ChevronDownIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="h-3.5 w-3.5" aria-hidden="true">
+      <path d="M9 6l6 6-6 6" transform="rotate(90 12 12)" />
+    </svg>
   );
 }
 

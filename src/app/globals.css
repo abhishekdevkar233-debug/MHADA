@@ -1,21 +1,24 @@
 @import "tailwindcss";
 
 :root {
-  --ink: #16231c;
-  --canvas: #f6f5f0;
+  --ink: #16202e;
+  --canvas: #f4f6f9;
   --surface: #ffffff;
-  --primary: #0f5c4c;
-  --primary-dark: #0a4436;
-  --primary-tint: #e7f0ec;
-  --accent: #e2703a;
-  --accent-tint: #fbe7db;
-  --accent-dark: #b4531f;
-  --border: #e4e1d6;
-  --border-soft: #eeebe1;
-  --muted: #5f665a;
-  --muted-2: #8a9083;
+  --primary: #14487a;
+  --primary-dark: #0d3157;
+  --primary-tint: #e6edf6;
+  --accent: #2e6da4;
+  --accent-tint: #e3eef8;
+  --accent-dark: #1f4f7a;
+  --border: #dde3ea;
+  --border-soft: #e9edf2;
+  --muted: #5a6472;
+  --muted-2: #8992a0;
   --danger: #b23a3a;
   --success: #1f6e43;
+  --success-tint: #e5f0e9;
+  --warning: #a66a1e;
+  --warning-tint: #f6ecdd;
 }
 
 @theme inline {
@@ -34,6 +37,9 @@
   --color-muted-2: var(--muted-2);
   --color-danger: var(--danger);
   --color-success: var(--success);
+  --color-success-tint: var(--success-tint);
+  --color-warning: var(--warning);
+  --color-warning-tint: var(--warning-tint);
   --font-sans: var(--font-inter);
   --font-display: var(--font-poppins);
   --font-mono: var(--font-plex-mono);

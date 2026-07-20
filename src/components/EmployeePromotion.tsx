@@ -141,7 +141,7 @@ export default function EmployeePromotion() {
         <EmployeeSearchCard employee={employee} onSelect={handleSelectEmployee} required />
 
         {employee && placement && (
-          <div className="mt-4 grid grid-cols-2 gap-x-6 gap-y-3 rounded-[10px] bg-canvas px-4 py-3.5 sm:grid-cols-3 lg:grid-cols-6">
+          <div className="mt-4 grid grid-cols-2 gap-x-6 gap-y-3 rounded-xl bg-canvas px-4 py-3.5 sm:grid-cols-3 lg:grid-cols-6">
             <ReadOnlyStat label="Employee ID" value={employee.id} />
             <ReadOnlyStat label="Employee Name" value={employee.name} />
             <ReadOnlyStat label="Current Designation" value={employee.designation} />

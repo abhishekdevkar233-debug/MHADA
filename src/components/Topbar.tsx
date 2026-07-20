@@ -1,8 +1,10 @@
 "use client";
 
+import { useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { findRoute } from "@/lib/nav";
 import Icon from "@/components/Icon";
+import { Label, Toast } from "@/components/form/Field";
 
 type TopbarProps = {
   onMenuOpen: () => void;
@@ -19,6 +21,7 @@ export default function Topbar({ onMenuOpen }: TopbarProps) {
   const pathname = usePathname();
   const router = useRouter();
   const crumb = currentCrumb(pathname);
+  const [showChangePassword, setShowChangePassword] = useState(false);
 
   return (
     <header className="sticky top-0 z-20 border-b border-border bg-surface">
@@ -68,6 +71,16 @@ export default function Topbar({ onMenuOpen }: TopbarProps) {
           </button>
           <button
             type="button"
+            onClick={() => setShowChangePassword(true)}
+            aria-label="Change Password"
+            title="Change Password"
+            className="flex h-9 flex-shrink-0 items-center gap-1.5 rounded-lg border border-border px-2.5 text-muted transition-colors hover:border-primary/40 hover:bg-primary-tint hover:text-primary sm:px-3"
+          >
+            <Icon name="key" className="h-[17px] w-[17px]" />
+            <span className="hidden text-[12.5px] font-semibold sm:inline">Change Password</span>
+          </button>
+          <button
+            type="button"
             aria-label="Help"
             className="hidden h-9 w-9 items-center justify-center rounded-lg text-muted hover:bg-canvas hover:text-ink sm:flex"
           >
@@ -114,6 +127,105 @@ export default function Topbar({ onMenuOpen }: TopbarProps) {
           </button>
         </div>
       </div>
+
+      {showChangePassword && (
+        <ChangePasswordModal
+          onClose={() => setShowChangePassword(false)}
+          onLoggedOut={() => router.push("/")}
+        />
+      )}
     </header>
+  );
+}
+
+function ChangePasswordModal({
+  onClose,
+  onLoggedOut,
+}: {
+  onClose: () => void;
+  onLoggedOut: () => void;
+}) {
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [toast, setToast] = useState<string | null>(null);
+
+  function handleSave() {
+    if (!currentPassword || !newPassword || !confirmPassword) {
+      setError("All fields are required.");
+      return;
+    }
+    if (newPassword !== confirmPassword) {
+      setError("New password and confirmation do not match.");
+      return;
+    }
+    setError(null);
+    setToast("Password updated. Please log in again.");
+    window.setTimeout(() => {
+      onClose();
+      onLoggedOut();
+    }, 1200);
+  }
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-ink/50 p-4">
+      <div className="w-full max-w-sm rounded-2xl bg-surface p-6 shadow-[0_30px_70px_rgba(0,0,0,0.35)]">
+        <h3 className="text-[16px] font-semibold text-ink">Change your password</h3>
+        <p className="mt-1 text-[13px] text-muted">
+          Choose a new password for your account.
+        </p>
+
+        <div className="mt-5 space-y-4">
+          <div>
+            <Label required>Current Password</Label>
+            <input
+              type="password"
+              value={currentPassword}
+              onChange={(e) => setCurrentPassword(e.target.value)}
+              className="w-full rounded-[9px] border-[1.5px] border-border bg-white px-3 py-2.5 text-[13.5px] text-ink outline-none focus:border-primary"
+            />
+          </div>
+          <div>
+            <Label required>New Password</Label>
+            <input
+              type="password"
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+              className="w-full rounded-[9px] border-[1.5px] border-border bg-white px-3 py-2.5 text-[13.5px] text-ink outline-none focus:border-primary"
+            />
+          </div>
+          <div>
+            <Label required>Confirm New Password</Label>
+            <input
+              type="password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              className="w-full rounded-[9px] border-[1.5px] border-border bg-white px-3 py-2.5 text-[13.5px] text-ink outline-none focus:border-primary"
+            />
+          </div>
+          {error && <p className="text-[12.5px] font-medium text-danger">{error}</p>}
+        </div>
+
+        <div className="mt-6 flex gap-2.5">
+          <button
+            type="button"
+            onClick={onClose}
+            className="flex-1 rounded-[9px] border-[1.5px] border-border py-2.5 text-[13.5px] font-semibold text-ink hover:border-muted-2"
+          >
+            Cancel
+          </button>
+          <button
+            type="button"
+            onClick={handleSave}
+            className="flex-1 rounded-[9px] bg-primary py-2.5 text-[13.5px] font-semibold text-white hover:bg-primary-dark"
+          >
+            Save
+          </button>
+        </div>
+      </div>
+
+      <Toast message={toast} />
+    </div>
   );
 }
