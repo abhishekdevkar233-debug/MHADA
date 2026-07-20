@@ -6,6 +6,7 @@ import Icon from "@/components/Icon";
 import PageHeader from "@/components/PageHeader";
 import { Toast } from "@/components/form/Field";
 import { EMPLOYEE_DIRECTORY } from "@/lib/employee-directory";
+import { useT } from "@/lib/i18n";
 
 const YEARS = ["2026", "2025", "2024"];
 const MONTHS = ["April", "May", "June", "July", "August", "September", "October", "November", "December", "January", "February", "March"];
@@ -22,6 +23,7 @@ function seedBillRows() {
 }
 
 export default function SalaryBill() {
+  const t = useT();
   const [year, setYear] = useState(YEARS[0]);
   const [month, setMonth] = useState("June");
   const [billType, setBillType] = useState(BILL_TYPES[0]);
@@ -46,7 +48,7 @@ export default function SalaryBill() {
   function handleGenerate() {
     setShown(true);
     setZoom(100);
-    announce("Bill generated.");
+    announce(t("Bill generated."));
   }
   function handleReset() {
     setYear(YEARS[0]);
@@ -76,11 +78,11 @@ export default function SalaryBill() {
           </div>
           <div className="flex flex-shrink-0 items-center gap-2.5">
             <button type="button" onClick={handleReset} className="rounded-[9px] border-[1.5px] border-border px-5 py-2.5 text-[13.5px] font-semibold text-ink hover:border-muted-2">
-              Reset
+              {t("Reset")}
             </button>
             <button type="button" onClick={handleGenerate} className="flex items-center gap-2 rounded-[9px] bg-primary px-6 py-2.5 text-[13.5px] font-semibold text-white hover:bg-primary-dark">
               <Icon name="bill-create" className="h-4 w-4" />
-              Generate Bill
+              {t("Generate Bill")}
             </button>
           </div>
         </div>
@@ -95,7 +97,7 @@ export default function SalaryBill() {
             <PreviewToolButton icon="allowance" label="Zoom In" onClick={() => setZoom((z) => Math.min(150, z + 10))} />
             <span className="mx-1 h-6 w-px bg-border" />
             <PreviewToolButton icon="printer" label="Print" onClick={() => window.print()} />
-            <PreviewToolButton icon="salary-slip" label="Download PDF" onClick={() => announce("PDF download isn't available in this preview.")} />
+            <PreviewToolButton icon="salary-slip" label="Download PDF" onClick={() => announce(t("PDF download isn't available in this preview."))} />
             <PreviewToolButton icon="chevron-double-left" label="Full Screen" onClick={() => setFullScreen((v) => !v)} />
           </div>
 
@@ -108,8 +110,8 @@ export default function SalaryBill() {
               <div className="flex items-center gap-3 border-b border-border-soft pb-4">
                 <Image src="/mhada-emblem.png" alt="MHADA" width={476} height={498} className="h-11 w-11 object-contain" />
                 <div>
-                  <div className="disp text-[15px] font-bold text-ink">Maharashtra Housing &amp; Area Development Authority</div>
-                  <div className="text-[11.5px] text-muted">Salary Bill</div>
+                  <div className="disp text-[15px] font-bold text-ink">{t("Maharashtra Housing & Area Development Authority")}</div>
+                  <div className="text-[11.5px] text-muted">{t("Salary Bill")}</div>
                 </div>
               </div>
 
@@ -123,12 +125,12 @@ export default function SalaryBill() {
               <table className="mt-4 w-full border border-border-soft text-[11.5px]">
                 <thead>
                   <tr className="bg-primary text-white">
-                    <th className="px-2.5 py-1.5 text-left">Emp. ID</th>
-                    <th className="px-2.5 py-1.5 text-left">Employee Name</th>
-                    <th className="px-2.5 py-1.5 text-left">Designation</th>
-                    <th className="px-2.5 py-1.5 text-right">Gross Earnings</th>
-                    <th className="px-2.5 py-1.5 text-right">Deductions</th>
-                    <th className="px-2.5 py-1.5 text-right">Net Pay</th>
+                    <th className="px-2.5 py-1.5 text-left">{t("Emp. ID")}</th>
+                    <th className="px-2.5 py-1.5 text-left">{t("Employee Name")}</th>
+                    <th className="px-2.5 py-1.5 text-left">{t("Designation")}</th>
+                    <th className="px-2.5 py-1.5 text-right">{t("Gross Earnings")}</th>
+                    <th className="px-2.5 py-1.5 text-right">{t("Deductions")}</th>
+                    <th className="px-2.5 py-1.5 text-right">{t("Net Pay")}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -152,22 +154,22 @@ export default function SalaryBill() {
               </div>
 
               <div className="mt-6 flex items-end justify-between text-[11px] text-muted">
-                <span>Generated on {new Date().toISOString().slice(0, 10)}</span>
-                <span className="border-t border-ink pt-1 text-center">Authorised Signatory</span>
+                <span>{t("Generated on")} {new Date().toISOString().slice(0, 10)}</span>
+                <span className="border-t border-ink pt-1 text-center">{t("Authorised Signatory")}</span>
               </div>
             </div>
           </div>
 
           <div className="flex flex-wrap items-center justify-end gap-2.5">
             <button type="button" onClick={handleClose} className="rounded-[9px] border-[1.5px] border-border px-5 py-2.5 text-[13.5px] font-semibold text-ink hover:border-muted-2">
-              Close
+              {t("Close")}
             </button>
-            <button type="button" onClick={() => announce("PDF download isn't available in this preview.")} className="rounded-[9px] border-[1.5px] border-border px-5 py-2.5 text-[13.5px] font-semibold text-ink hover:border-muted-2">
-              Download PDF
+            <button type="button" onClick={() => announce(t("PDF download isn't available in this preview."))} className="rounded-[9px] border-[1.5px] border-border px-5 py-2.5 text-[13.5px] font-semibold text-ink hover:border-muted-2">
+              {t("Download PDF")}
             </button>
             <button type="button" onClick={() => window.print()} className="flex items-center gap-2 rounded-[9px] bg-accent px-6 py-2.5 text-[13.5px] font-semibold text-white hover:bg-accent-dark">
               <Icon name="printer" className="h-4 w-4" />
-              Print
+              {t("Print")}
             </button>
           </div>
         </div>
@@ -179,13 +181,16 @@ export default function SalaryBill() {
 }
 
 function FilterSelect({ label, value, onChange, options }: { label: string; value: string; onChange: (v: string) => void; options: string[] }) {
+  const t = useT();
   return (
     <div>
-      <label className="mb-1.5 block text-[12.5px] font-semibold text-ink">{label}</label>
+      <label className="mb-1.5 block text-[12.5px] font-semibold text-ink">{t(label)}</label>
       <div className="relative">
         <select value={value} onChange={(e) => onChange(e.target.value)} className="w-full appearance-none rounded-[9px] border-[1.5px] border-border bg-white px-3 py-2.5 pr-9 text-[13.5px] text-ink outline-none focus:border-primary">
           {options.map((o) => (
-            <option key={o}>{o}</option>
+            <option key={o} value={o}>
+              {t(o)}
+            </option>
           ))}
         </select>
         <span className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-muted-2">
@@ -197,27 +202,30 @@ function FilterSelect({ label, value, onChange, options }: { label: string; valu
 }
 
 function PreviewToolButton({ icon, label, onClick }: { icon: string; label: string; onClick: () => void }) {
+  const t = useT();
   return (
-    <button type="button" onClick={onClick} title={label} className="flex h-8 items-center gap-1.5 rounded-[7px] px-2.5 text-[12px] font-semibold text-ink hover:bg-canvas">
+    <button type="button" onClick={onClick} title={t(label)} className="flex h-8 items-center gap-1.5 rounded-[7px] px-2.5 text-[12px] font-semibold text-ink hover:bg-canvas">
       <Icon name={icon} className="h-3.5 w-3.5" />
-      <span className="hidden sm:inline">{label}</span>
+      <span className="hidden sm:inline">{t(label)}</span>
     </button>
   );
 }
 
 function SlipField({ label, value }: { label: string; value: string }) {
+  const t = useT();
   return (
     <div className="flex justify-between gap-2">
-      <span className="text-muted">{label}</span>
-      <span className="font-medium text-ink">{value}</span>
+      <span className="text-muted">{t(label)}</span>
+      <span className="font-medium text-ink">{t(value)}</span>
     </div>
   );
 }
 
 function TotalBox({ label, value, highlight }: { label: string; value: number; highlight?: boolean }) {
+  const t = useT();
   return (
     <div className={`rounded-[8px] px-3.5 py-2.5 ${highlight ? "bg-primary-tint" : "bg-canvas"}`}>
-      <div className={`text-[10.5px] font-semibold tracking-[0.02em] uppercase ${highlight ? "text-primary" : "text-muted-2"}`}>{label}</div>
+      <div className={`text-[10.5px] font-semibold tracking-[0.02em] uppercase ${highlight ? "text-primary" : "text-muted-2"}`}>{t(label)}</div>
       <div className={`disp mt-0.5 text-[15px] font-bold ${highlight ? "text-primary" : "text-ink"}`}>₹{value.toLocaleString("en-IN")}</div>
     </div>
   );

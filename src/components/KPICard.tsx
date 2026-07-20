@@ -1,4 +1,5 @@
 import Icon from "@/components/Icon";
+import { useT } from "@/lib/i18n";
 
 type Tone = "primary" | "accent" | "success" | "neutral";
 
@@ -22,10 +23,11 @@ export default function KPICard({
   icon?: string;
   tone?: Tone;
 }) {
+  const t = useT();
   return (
     <div className="rounded-xl border border-border bg-surface px-4 py-3.5">
       <div className="flex items-start justify-between gap-2">
-        <div className="text-[10.5px] font-semibold tracking-[0.03em] text-muted-2 uppercase">{label}</div>
+        <div className="text-[10.5px] font-semibold tracking-[0.03em] text-muted-2 uppercase">{t(label)}</div>
         {icon && (
           <span className={`flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-[8px] ${TONE_CLS[tone]}`}>
             <Icon name={icon} className="h-3.5 w-3.5" />
@@ -33,7 +35,7 @@ export default function KPICard({
         )}
       </div>
       <div className="disp mt-1.5 truncate text-[19px] font-semibold text-ink">{value}</div>
-      {sub && <div className="mt-0.5 truncate text-[11px] text-muted">{sub}</div>}
+      {sub && <div className="mt-0.5 truncate text-[11px] text-muted">{t(sub)}</div>}
     </div>
   );
 }

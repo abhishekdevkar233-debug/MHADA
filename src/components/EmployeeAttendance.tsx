@@ -7,6 +7,7 @@ import KPICard from "@/components/KPICard";
 import DataTablePagination from "@/components/DataTablePagination";
 import { Toast } from "@/components/form/Field";
 import { EMPLOYEE_DIRECTORY } from "@/lib/employee-directory";
+import { useT } from "@/lib/i18n";
 
 const MONTHS = ["April", "May", "June", "July", "August", "September", "October", "November", "December", "January", "February", "March"];
 const YEARS = ["2026", "2025", "2024"];
@@ -50,6 +51,7 @@ function statusBadge(status: Status) {
 }
 
 export default function EmployeeAttendance() {
+  const t = useT();
   const [month, setMonth] = useState("June");
   const [year, setYear] = useState(YEARS[0]);
   const [rows, setRows] = useState<AttendanceRow[]>(seedRows);
@@ -133,15 +135,15 @@ export default function EmployeeAttendance() {
   }
 
   function handleSaveDraft() {
-    announce("Attendance draft saved.");
+    announce(t("Attendance draft saved."));
   }
   function handleReset() {
     setRows(seedRows());
-    announce("Attendance reset to imported values.");
+    announce(t("Attendance reset to imported values."));
   }
   function confirmFinalize() {
     setConfirmOpen(false);
-    announce(`Attendance finalized for ${month} ${year}.`);
+    announce(`${t("Attendance finalized for")} ${t(month)} ${year}.`);
   }
 
   return (
@@ -176,19 +178,19 @@ export default function EmployeeAttendance() {
           <div className="flex flex-col gap-2 sm:flex-row lg:flex-shrink-0">
             <button
               type="button"
-              onClick={() => announce("Biometric attendance import started.")}
+              onClick={() => announce(t("Biometric attendance import started."))}
               className="flex items-center justify-center gap-2 rounded-[8px] bg-primary px-4 py-2.5 text-[13px] font-semibold whitespace-nowrap text-white transition-colors hover:bg-primary-dark"
             >
               <Icon name="attendance" className="h-4 w-4" />
-              Import Attendance
+              {t("Import Attendance")}
             </button>
             <button
               type="button"
-              onClick={() => announce("Import history isn't available in this preview.")}
+              onClick={() => announce(t("Import history isn't available in this preview."))}
               className="flex items-center justify-center gap-2 rounded-[8px] border-[1.5px] border-border px-4 py-2.5 text-[13px] font-semibold whitespace-nowrap text-ink transition-colors hover:border-muted-2"
             >
               <Icon name="bill-report" className="h-4 w-4" />
-              Import History
+              {t("Import History")}
             </button>
           </div>
         </div>
@@ -205,32 +207,38 @@ export default function EmployeeAttendance() {
               type="search"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search by Employee ID, Employee Name or Department…"
+              placeholder={t("Search by Employee ID, Employee Name or Department…")}
               className="h-9.5 w-full rounded-[8px] border-[1.5px] border-border bg-white pr-3 pl-9 text-[13px] text-ink placeholder:text-muted-2 focus:border-primary focus:outline-none"
             />
           </div>
           <select value={view} onChange={(e) => setView(e.target.value as (typeof VIEWS)[number])} className="h-9.5 rounded-[8px] border-[1.5px] border-border bg-white px-3 text-[13px] text-ink focus:border-primary focus:outline-none">
             {VIEWS.map((v) => (
-              <option key={v}>{v}</option>
+              <option key={v} value={v}>
+                {t(v)}
+              </option>
             ))}
           </select>
           <select value={department} onChange={(e) => setDepartment(e.target.value)} className="h-9.5 rounded-[8px] border-[1.5px] border-border bg-white px-3 text-[13px] text-ink focus:border-primary focus:outline-none">
-            <option value="">All Departments</option>
+            <option value="">{t("All Departments")}</option>
             {DEPARTMENTS.map((d) => (
-              <option key={d}>{d}</option>
+              <option key={d} value={d}>
+                {t(d)}
+              </option>
             ))}
           </select>
           <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)} className="h-9.5 rounded-[8px] border-[1.5px] border-border bg-white px-3 text-[13px] text-ink focus:border-primary focus:outline-none">
-            <option value="">All Statuses</option>
+            <option value="">{t("All Statuses")}</option>
             {STATUSES.map((s) => (
-              <option key={s}>{s}</option>
+              <option key={s} value={s}>
+                {t(s)}
+              </option>
             ))}
           </select>
           <button type="button" onClick={applyFilters} className="flex h-9.5 items-center justify-center gap-1.5 rounded-[8px] bg-primary px-4 text-[13px] font-semibold text-white hover:bg-primary-dark">
-            Apply Filters
+            {t("Apply Filters")}
           </button>
           <button type="button" onClick={resetFilters} className="flex h-9.5 items-center justify-center gap-1.5 rounded-[8px] border-[1.5px] border-border px-4 text-[13px] font-semibold text-ink hover:border-muted-2">
-            Reset
+            {t("Reset")}
           </button>
         </div>
       </div>
@@ -249,14 +257,14 @@ export default function EmployeeAttendance() {
                 <Th>Leave Information</Th>
                 <Th>Remarks</Th>
                 <Th>Status</Th>
-                <Th>Actions</Th>
+                <Th>Action</Th>
               </tr>
             </thead>
             <tbody>
               {pageRows.length === 0 && (
                 <tr>
                   <td colSpan={9} className="px-4 py-12 text-center text-muted">
-                    No employees match the current filters.
+                    {t("No employees match the current filters.")}
                   </td>
                 </tr>
               )}
@@ -264,9 +272,9 @@ export default function EmployeeAttendance() {
                 <tr key={r.id} className={`border-b border-border-soft transition-colors last:border-0 hover:bg-primary-tint/40 ${i % 2 === 1 ? "bg-canvas/60" : "bg-surface"}`}>
                   <td className="px-3.5 py-2.5 font-mono text-[12px] text-muted-2">{r.id}</td>
                   <td className="px-3.5 py-2.5 font-medium whitespace-nowrap text-ink">{r.name}</td>
-                  <td className="px-3.5 py-2.5 whitespace-nowrap text-muted">{r.department}</td>
+                  <td className="px-3.5 py-2.5 whitespace-nowrap text-muted">{t(r.department)}</td>
                   <td className="px-3.5 py-2.5 whitespace-nowrap text-muted">
-                    {r.biometricDays}/{r.totalDays} days
+                    {r.biometricDays}/{r.totalDays} {t("days")}
                   </td>
                   <td className="px-3.5 py-2.5">
                     <input
@@ -276,7 +284,7 @@ export default function EmployeeAttendance() {
                       className="w-20 rounded-[6px] border-[1.5px] border-border bg-white px-2 py-1.5 text-right text-[12.5px] text-ink outline-none focus:border-primary"
                     />
                   </td>
-                  <td className="px-3.5 py-2.5 text-muted">{r.leaveInfo}</td>
+                  <td className="px-3.5 py-2.5 text-muted">{r.leaveInfo === "—" ? r.leaveInfo : t(r.leaveInfo)}</td>
                   <td className="px-3.5 py-2.5">
                     <input
                       value={r.remarks}
@@ -287,25 +295,25 @@ export default function EmployeeAttendance() {
                   </td>
                   <td className="px-3.5 py-2.5">
                     <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-[11px] font-semibold whitespace-nowrap ${statusBadge(r.status)}`}>
-                      {r.status}
+                      {t(r.status)}
                     </span>
                   </td>
                   <td className="px-3.5 py-2.5">
                     <div className="flex items-center gap-2">
                       <button
                         type="button"
-                        onClick={() => announce(`Editing attendance for ${r.name}…`)}
-                        title="Edit"
-                        aria-label={`Edit attendance for ${r.name}`}
+                        onClick={() => announce(`${t("Editing attendance for")} ${r.name}…`)}
+                        title={t("Edit")}
+                        aria-label={`${t("Edit attendance for")} ${r.name}`}
                         className="flex h-7 w-7 items-center justify-center rounded-lg text-muted hover:bg-canvas hover:text-ink"
                       >
                         <Icon name="pencil" className="h-3.5 w-3.5" />
                       </button>
                       <button
                         type="button"
-                        onClick={() => announce(`Viewing details for ${r.name}…`)}
-                        title="View Details"
-                        aria-label={`View details for ${r.name}`}
+                        onClick={() => announce(`${t("Viewing details for")} ${r.name}…`)}
+                        title={t("View Details")}
+                        aria-label={`${t("View details for")} ${r.name}`}
                         className="flex h-7 w-7 items-center justify-center rounded-lg text-muted hover:bg-canvas hover:text-ink"
                       >
                         <Icon name="eye" className="h-3.5 w-3.5" />
@@ -337,10 +345,10 @@ export default function EmployeeAttendance() {
       {/* Bottom action bar */}
       <div className="mt-5 flex flex-wrap items-center justify-center gap-2.5">
         <button type="button" onClick={handleReset} className="rounded-[8px] border-[1.5px] border-border px-5 py-2.5 text-[13.5px] font-semibold text-ink hover:border-muted-2">
-          Reset
+          {t("Reset")}
         </button>
         <button type="button" onClick={handleSaveDraft} className="rounded-[8px] border-[1.5px] border-border px-5 py-2.5 text-[13.5px] font-semibold text-ink hover:border-muted-2">
-          Save Draft
+          {t("Save Draft")}
         </button>
         <button
           type="button"
@@ -348,26 +356,25 @@ export default function EmployeeAttendance() {
           className="flex items-center gap-2 rounded-[8px] bg-accent px-6 py-2.5 text-[13.5px] font-semibold text-white hover:bg-accent-dark"
         >
           <Icon name="attendance" className="h-4 w-4" />
-          Finalize Attendance
+          {t("Finalize Attendance")}
         </button>
       </div>
 
       {confirmOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-ink/50 p-4">
           <div className="w-full max-w-sm rounded-2xl bg-surface p-6 shadow-[0_30px_70px_rgba(0,0,0,0.35)]">
-            <h3 className="text-[16px] font-semibold text-ink">Finalize attendance?</h3>
+            <h3 className="text-[16px] font-semibold text-ink">{t("Finalize attendance?")}</h3>
             <p className="mt-1.5 text-[13px] text-muted">
-              This will lock attendance for <span className="font-medium text-ink">{month} {year}</span> and
-              make it available for payroll processing. {summary.needReview > 0 && (
-                <span className="font-medium text-danger">{summary.needReview} employee(s) still need review.</span>
+              {t("This will lock attendance for")} <span className="font-medium text-ink">{t(month)} {year}</span> {t("and make it available for payroll processing.")} {summary.needReview > 0 && (
+                <span className="font-medium text-danger">{summary.needReview} {t("employee(s) still need review.")}</span>
               )}
             </p>
             <div className="mt-5 flex gap-2.5">
               <button type="button" onClick={() => setConfirmOpen(false)} className="flex-1 rounded-[9px] border-[1.5px] border-border py-2.5 text-[13.5px] font-semibold text-ink hover:border-muted-2">
-                Cancel
+                {t("Cancel")}
               </button>
               <button type="button" onClick={confirmFinalize} className="flex-1 rounded-[9px] bg-primary py-2.5 text-[13.5px] font-semibold text-white hover:bg-primary-dark">
-                Confirm
+                {t("Confirm")}
               </button>
             </div>
           </div>
@@ -380,13 +387,16 @@ export default function EmployeeAttendance() {
 }
 
 function FilterSelect({ label, value, onChange, options }: { label: string; value: string; onChange: (v: string) => void; options: string[] }) {
+  const t = useT();
   return (
     <div>
-      <label className="mb-1.5 block text-[12px] font-semibold text-ink">{label}</label>
+      <label className="mb-1.5 block text-[12px] font-semibold text-ink">{t(label)}</label>
       <div className="relative">
         <select value={value} onChange={(e) => onChange(e.target.value)} className="w-full appearance-none rounded-[8px] border-[1.5px] border-border bg-white px-3 py-2 pr-9 text-[13px] text-ink outline-none focus:border-primary">
           {options.map((o) => (
-            <option key={o}>{o}</option>
+            <option key={o} value={o}>
+              {t(o)}
+            </option>
           ))}
         </select>
         <span className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-muted-2">
@@ -398,14 +408,20 @@ function FilterSelect({ label, value, onChange, options }: { label: string; valu
 }
 
 function BiometricStat({ label, value }: { label: string; value: string }) {
+  const t = useT();
   return (
     <div>
-      <div className="text-[10.5px] font-semibold tracking-[0.02em] text-muted-2 uppercase">{label}</div>
+      <div className="text-[10.5px] font-semibold tracking-[0.02em] text-muted-2 uppercase">{t(label)}</div>
       <div className="mt-0.5 font-semibold text-ink">{value}</div>
     </div>
   );
 }
 
 function Th({ children }: { children: React.ReactNode }) {
-  return <th className="px-3.5 py-2.5 text-left text-[10.5px] font-semibold tracking-[0.03em] whitespace-nowrap text-muted uppercase">{children}</th>;
+  const t = useT();
+  return (
+    <th className="px-3.5 py-2.5 text-left text-[10.5px] font-semibold tracking-[0.03em] whitespace-nowrap text-muted uppercase">
+      {typeof children === "string" ? t(children) : children}
+    </th>
+  );
 }

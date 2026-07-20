@@ -50,6 +50,7 @@ export function TextField({
   error?: string;
   type?: string;
 }) {
+  const t = useT();
   const props = onChange
     ? { value: value ?? "", onChange: (e: React.ChangeEvent<HTMLInputElement>) => onChange(e.target.value) }
     : { defaultValue };
@@ -62,11 +63,11 @@ export function TextField({
             type={type}
             className={`${inputCls} pr-9 ${error ? "border-danger" : ""}`}
             disabled={disabled}
-            placeholder={placeholder}
+            placeholder={placeholder && t(placeholder)}
             {...props}
           />
           <span className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-[12px] text-muted-2">
-            {suffix}
+            {t(suffix)}
           </span>
         </div>
       ) : (
@@ -74,11 +75,11 @@ export function TextField({
           type={type}
           className={`${inputCls} ${error ? "border-danger" : ""}`}
           disabled={disabled}
-          placeholder={placeholder}
+          placeholder={placeholder && t(placeholder)}
           {...props}
         />
       )}
-      {error && <p className="mt-1 text-[11.5px] font-medium text-danger">{error}</p>}
+      {error && <p className="mt-1 text-[11.5px] font-medium text-danger">{t(error)}</p>}
     </div>
   );
 }
@@ -98,13 +99,14 @@ export function TextAreaField({
   placeholder?: string;
   rows?: number;
 }) {
+  const t = useT();
   return (
     <div>
       <Label required={required}>{label}</Label>
       <textarea
         rows={rows}
         className={inputCls}
-        placeholder={placeholder}
+        placeholder={placeholder && t(placeholder)}
         value={value}
         onChange={(e) => onChange?.(e.target.value)}
       />
@@ -169,6 +171,7 @@ export function SelectField({
   onChange?: (value: string) => void;
   placeholder?: string;
 }) {
+  const t = useT();
   const props = onChange
     ? { value: value ?? "", onChange: (e: React.ChangeEvent<HTMLSelectElement>) => onChange(e.target.value) }
     : { defaultValue: defaultValue ?? "" };
@@ -178,10 +181,12 @@ export function SelectField({
       <div className="relative">
         <select className={`${inputCls} appearance-none pr-9`} disabled={disabled} {...props}>
           <option value="" disabled>
-            {placeholder}
+            {t(placeholder)}
           </option>
           {options.map((o) => (
-            <option key={o}>{o}</option>
+            <option key={o} value={o}>
+              {t(o)}
+            </option>
           ))}
         </select>
         <span className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-muted-2">
@@ -203,6 +208,7 @@ export function CheckField({
   checked?: boolean;
   onChange?: (checked: boolean) => void;
 }) {
+  const t = useT();
   const props = onChange
     ? { checked: checked ?? false, onChange: (e: React.ChangeEvent<HTMLInputElement>) => onChange(e.target.checked) }
     : { defaultChecked };
@@ -215,7 +221,7 @@ export function CheckField({
         {...props}
       />
       <label htmlFor={label} className="text-[12.5px] font-medium text-ink">
-        {label}
+        {t(label)}
       </label>
     </div>
   );
@@ -236,6 +242,7 @@ export function RadioField({
   defaultValue?: string;
   onChange?: (value: string) => void;
 }) {
+  const t = useT();
   const name = label.replace(/\s+/g, "-");
   return (
     <div>
@@ -251,7 +258,7 @@ export function RadioField({
               onChange={() => onChange?.(o)}
               className="h-4 w-4 accent-accent"
             />
-            {o}
+            {t(o)}
           </label>
         ))}
       </div>
@@ -352,9 +359,10 @@ export function MultiSelectDropdown({
 }
 
 export function SectionTitle({ children }: { children: React.ReactNode }) {
+  const t = useT();
   return (
     <div className="mb-4 rounded-[8px] bg-primary-tint px-3.5 py-2 text-[12.5px] font-semibold text-primary">
-      {children}
+      {typeof children === "string" ? t(children) : children}
     </div>
   );
 }

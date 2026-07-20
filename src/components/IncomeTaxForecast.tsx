@@ -6,6 +6,7 @@ import PageHeader from "@/components/PageHeader";
 import KPICard from "@/components/KPICard";
 import { EMPLOYEE_DIRECTORY } from "@/lib/employee-directory";
 import { Toast } from "@/components/form/Field";
+import { useT } from "@/lib/i18n";
 
 const DEPARTMENTS = ["Mumbai Board", "Konkan Board", "Pune Board", "Nagpur Board", "Nashik Board"];
 const SUB_DEPARTMENTS = ["Accounts Office", "Engineering Office", "Estate Office", "Administration Office"];
@@ -95,6 +96,7 @@ function remainingMonthsInFY() {
 }
 
 export default function IncomeTaxForecast() {
+  const t = useT();
   const [department, setDepartment] = useState("");
   const [subDepartment, setSubDepartment] = useState("");
   const [financialYear, setFinancialYear] = useState(FINANCIAL_YEARS[0]);
@@ -116,11 +118,11 @@ export default function IncomeTaxForecast() {
 
   function handleLoadForecast() {
     if (!employeeId) {
-      announce("Select an employee to load the forecast.");
+      announce(t("Select an employee to load the forecast."));
       return;
     }
     setLoaded(true);
-    announce(`Forecast loaded for ${employee?.name}.`);
+    announce(`${t("Forecast loaded for")} ${employee?.name}.`);
   }
 
   function updateCell(month: string, key: EarningKey | DeductionKey, value: string) {
@@ -139,7 +141,7 @@ export default function IncomeTaxForecast() {
       }
       return next;
     });
-    announce("Copied each month's values from the month before it.");
+    announce(t("Copied each month's values from the month before it."));
   }
 
   function handleApplyToRemaining() {
@@ -151,12 +153,12 @@ export default function IncomeTaxForecast() {
       }
       return next;
     });
-    announce("Applied April's values to all remaining months.");
+    announce(t("Applied April's values to all remaining months."));
   }
 
   function handleReset() {
     setRows(seedRows());
-    announce("All months reset to default values.");
+    announce(t("All months reset to default values."));
   }
 
   const totals = useMemo(() => {
@@ -201,13 +203,13 @@ export default function IncomeTaxForecast() {
           <FilterSelect label="Sub Department" value={subDepartment} onChange={setSubDepartment} options={SUB_DEPARTMENTS} />
           <FilterSelect label="Financial Year" value={financialYear} onChange={setFinancialYear} options={FINANCIAL_YEARS} />
           <div>
-            <label className="mb-1.5 block text-[12.5px] font-semibold text-ink">Employee Search</label>
+            <label className="mb-1.5 block text-[12.5px] font-semibold text-ink">{t("Employee Search")}</label>
             <select
               value={employeeId}
               onChange={(e) => setEmployeeId(e.target.value)}
               className="w-full rounded-[9px] border-[1.5px] border-border bg-white px-3 py-2.5 text-[13.5px] text-ink outline-none focus:border-primary"
             >
-              <option value="">Choose Employee</option>
+              <option value="">{t("Choose Employee")}</option>
               {EMPLOYEE_DIRECTORY.map((e) => (
                 <option key={e.id} value={e.id}>
                   {e.name} — {e.id}
@@ -222,7 +224,7 @@ export default function IncomeTaxForecast() {
               className="flex h-[42px] w-full items-center justify-center gap-2 rounded-[9px] bg-primary text-[13.5px] font-semibold text-white hover:bg-primary-dark"
             >
               <Icon name="income-tax" className="h-4 w-4" />
-              Load Forecast
+              {t("Load Forecast")}
             </button>
           </div>
         </div>
@@ -233,10 +235,9 @@ export default function IncomeTaxForecast() {
           <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-primary-tint text-primary">
             <Icon name="income-tax" className="h-7 w-7" />
           </span>
-          <h2 className="disp mt-4 text-base font-semibold text-ink">No forecast loaded</h2>
+          <h2 className="disp mt-4 text-base font-semibold text-ink">{t("No forecast loaded")}</h2>
           <p className="mt-1.5 max-w-md text-[13.5px] text-muted">
-            Select a department, sub department, financial year, and employee
-            above, then click <span className="font-medium text-ink">Load Forecast</span>.
+            {t("Select a department, sub department, financial year, and employee above, then click")} <span className="font-medium text-ink">{t("Load Forecast")}</span>.
           </p>
         </div>
       ) : (
@@ -246,7 +247,7 @@ export default function IncomeTaxForecast() {
             <KPICard label="Employee ID" value={employee?.id ?? "—"} icon="employee" />
             <KPICard label="Employee Name" value={employee?.name ?? "—"} icon="employee" />
             <KPICard label="Designation" value={employee?.designation ?? "—"} icon="employee" />
-            <KPICard label="Department" value={employee?.department ?? "—"} icon="shield" />
+            <KPICard label="Department" value={employee ? t(employee.department) : "—"} icon="shield" />
             <KPICard label="Sub Department" value={subDepartment || "—"} icon="shield" />
             <KPICard label="Financial Year" value={financialYear} icon="income-tax" />
             <KPICard label="Remaining Months" value={String(remainingMonthsInFY())} icon="income-tax" />
@@ -259,20 +260,22 @@ export default function IncomeTaxForecast() {
           <div className="mb-5 flex flex-wrap items-center gap-2 rounded-xl border border-border bg-surface p-3">
             <ToolbarButton icon="pay-change" label="Copy Previous Month" onClick={handleCopyPreviousMonth} />
             <ToolbarButton icon="allowance" label="Apply to Remaining Months" onClick={handleApplyToRemaining} />
-            <ToolbarButton icon="attendance" label="Auto Calculate" onClick={() => announce("Gross, deductions, and net pay recalculated.")} />
-            <ToolbarButton icon="salary-slip" label="Import Excel" onClick={() => announce("Excel import isn't available in this preview.")} />
-            <ToolbarButton icon="salary-slip" label="Export Excel" onClick={() => announce("Exporting forecast to Excel…")} />
+            <ToolbarButton icon="attendance" label="Auto Calculate" onClick={() => announce(t("Gross, deductions, and net pay recalculated."))} />
+            <ToolbarButton icon="salary-slip" label="Import Excel" onClick={() => announce(t("Excel import isn't available in this preview."))} />
+            <ToolbarButton icon="salary-slip" label="Export Excel" onClick={() => announce(t("Exporting forecast to Excel…"))} />
             <ToolbarButton icon="x-circle" label="Reset All" onClick={handleReset} />
 
             <div className="ml-auto flex items-center gap-2">
-              <label className="text-[12.5px] font-semibold text-ink">Type of Forecast</label>
+              <label className="text-[12.5px] font-semibold text-ink">{t("Type of Forecast")}</label>
               <select
                 value={forecastType}
                 onChange={(e) => setForecastType(e.target.value as (typeof FORECAST_TYPES)[number])}
                 className="h-9.5 rounded-[9px] border-[1.5px] border-border bg-white px-3 text-[13px] text-ink focus:border-primary focus:outline-none"
               >
-                {FORECAST_TYPES.map((t) => (
-                  <option key={t}>{t}</option>
+                {FORECAST_TYPES.map((ft) => (
+                  <option key={ft} value={ft}>
+                    {t(ft)}
+                  </option>
                 ))}
               </select>
             </div>
@@ -285,21 +288,21 @@ export default function IncomeTaxForecast() {
                 <thead>
                   <tr className="sticky top-0 z-20">
                     <th rowSpan={2} className="sticky left-0 z-30 border-b border-border-soft bg-border-soft/90 px-3 py-2.5 text-left text-[10.5px] font-semibold tracking-[0.04em] text-muted uppercase backdrop-blur">
-                      Month
+                      {t("Month")}
                     </th>
                     {showEarnings && (
                       <th colSpan={earningsCols.length + (showGross ? 1 : 0)} className="border-b border-primary/20 bg-primary px-3 py-1.5 text-center text-[11px] font-bold tracking-[0.04em] text-white uppercase">
-                        Earnings
+                        {t("Earnings")}
                       </th>
                     )}
                     {showDeductions && (
                       <th colSpan={DEDUCTION_COLS.length + 1} className="border-b border-[#2E6DA4]/20 bg-[#2E6DA4] px-3 py-1.5 text-center text-[11px] font-bold tracking-[0.04em] text-white uppercase">
-                        Deductions
+                        {t("Deductions")}
                       </th>
                     )}
                     {showNetPay && (
                       <th className="border-b border-[#0D3157]/20 bg-[#0D3157] px-3 py-1.5 text-center text-[11px] font-bold tracking-[0.04em] text-white uppercase">
-                        Net Pay
+                        {t("Net Pay")}
                       </th>
                     )}
                   </tr>
@@ -310,15 +313,15 @@ export default function IncomeTaxForecast() {
                           {c.label}
                         </Th>
                       ))}
-                    {showGross && <Th tint="primary" auto>Gross Amount</Th>}
+                    {showGross && <Th tint="primary" auto>{t("Gross Amount")}</Th>}
                     {showDeductions &&
                       DEDUCTION_COLS.map((c) => (
                         <Th key={c.key} tint="success">
                           {c.label}
                         </Th>
                       ))}
-                    {showDeductions && <Th tint="success" auto>Total Deduction</Th>}
-                    {showNetPay && <Th tint="purple" auto>Net Pay</Th>}
+                    {showDeductions && <Th tint="success" auto>{t("Total Deduction")}</Th>}
+                    {showNetPay && <Th tint="purple" auto>{t("Net Pay")}</Th>}
                   </tr>
                 </thead>
                 <tbody>
@@ -327,7 +330,7 @@ export default function IncomeTaxForecast() {
                     return (
                       <tr key={m} className={`transition-colors hover:bg-primary-tint/40 ${i % 2 === 1 ? "bg-canvas/60" : "bg-surface"}`}>
                         <td className="sticky left-0 z-10 border-b border-border-soft bg-inherit px-3 py-2 font-semibold whitespace-nowrap text-ink">
-                          {m}
+                          {t(m)}
                         </td>
                         {showEarnings &&
                           earningsCols.map((c) => (
@@ -362,7 +365,7 @@ export default function IncomeTaxForecast() {
                 </tbody>
                 <tfoot>
                   <tr className="border-t-2 border-border bg-border-soft/70 font-semibold">
-                    <td className="sticky left-0 z-10 bg-border-soft px-3 py-2.5 whitespace-nowrap text-ink">Total</td>
+                    <td className="sticky left-0 z-10 bg-border-soft px-3 py-2.5 whitespace-nowrap text-ink">{t("Total")}</td>
                     {showEarnings &&
                       earningsCols.map((c) => (
                         <td key={c.key} className="px-3 py-2.5 text-right whitespace-nowrap text-ink">
@@ -386,29 +389,29 @@ export default function IncomeTaxForecast() {
 
           {/* Legend */}
           <div className="mt-4 flex flex-wrap items-center gap-5 text-[12px] text-muted">
-            <LegendSwatch cls="border border-border bg-white" label="Editable" />
-            <LegendSwatch cls="bg-primary-tint" label="Auto Calculated" />
-            <LegendSwatch cls="bg-border-soft" label="Read Only" />
+            <LegendSwatch cls="border border-border bg-white" label={t("Editable")} />
+            <LegendSwatch cls="bg-primary-tint" label={t("Auto Calculated")} />
+            <LegendSwatch cls="bg-border-soft" label={t("Read Only")} />
           </div>
 
           {/* Actions */}
           <div className="mt-6 flex flex-wrap items-center justify-center gap-2.5">
             <button type="button" onClick={handleReset} className="rounded-[9px] border-[1.5px] border-border px-5 py-2.5 text-[13.5px] font-semibold text-ink hover:border-muted-2">
-              Reset
+              {t("Reset")}
             </button>
             <button type="button" onClick={() => setLoaded(false)} className="rounded-[9px] border-[1.5px] border-border px-5 py-2.5 text-[13.5px] font-semibold text-ink hover:border-muted-2">
-              Cancel
+              {t("Cancel")}
             </button>
-            <button type="button" onClick={() => announce("Forecast saved.")} className="rounded-[9px] border-[1.5px] border-border px-5 py-2.5 text-[13.5px] font-semibold text-ink hover:border-muted-2">
-              Save
+            <button type="button" onClick={() => announce(t("Forecast saved."))} className="rounded-[9px] border-[1.5px] border-border px-5 py-2.5 text-[13.5px] font-semibold text-ink hover:border-muted-2">
+              {t("Save")}
             </button>
             <button
               type="button"
-              onClick={() => announce("Forecast saved and generated.")}
+              onClick={() => announce(t("Forecast saved and generated."))}
               className="flex items-center gap-2 rounded-[9px] bg-accent px-6 py-2.5 text-[13.5px] font-semibold text-white hover:bg-accent-dark"
             >
               <Icon name="bill-create" className="h-4 w-4" />
-              Save &amp; Generate Tax Forecast
+              {t("Save & Generate Tax Forecast")}
             </button>
           </div>
         </>
@@ -430,18 +433,21 @@ function FilterSelect({
   onChange: (v: string) => void;
   options: string[];
 }) {
+  const t = useT();
   return (
     <div>
-      <label className="mb-1.5 block text-[12.5px] font-semibold text-ink">{label}</label>
+      <label className="mb-1.5 block text-[12.5px] font-semibold text-ink">{t(label)}</label>
       <div className="relative">
         <select
           value={value}
           onChange={(e) => onChange(e.target.value)}
           className="w-full appearance-none rounded-[9px] border-[1.5px] border-border bg-white px-3 py-2.5 pr-9 text-[13.5px] text-ink outline-none focus:border-primary"
         >
-          <option value="">All</option>
+          <option value="">{t("All")}</option>
           {options.map((o) => (
-            <option key={o}>{o}</option>
+            <option key={o} value={o}>
+              {t(o)}
+            </option>
           ))}
         </select>
         <span className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-muted-2">
@@ -453,6 +459,7 @@ function FilterSelect({
 }
 
 function ToolbarButton({ icon, label, onClick }: { icon: string; label: string; onClick: () => void }) {
+  const t = useT();
   return (
     <button
       type="button"
@@ -460,7 +467,7 @@ function ToolbarButton({ icon, label, onClick }: { icon: string; label: string; 
       className="flex h-9 items-center gap-1.5 rounded-[9px] border-[1.5px] border-border px-3 text-[12.5px] font-semibold text-ink transition-colors hover:border-muted-2"
     >
       <Icon name={icon} className="h-3.5 w-3.5" />
-      {label}
+      {t(label)}
     </button>
   );
 }

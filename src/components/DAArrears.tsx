@@ -7,6 +7,7 @@ import KPICard from "@/components/KPICard";
 import { Toast } from "@/components/form/Field";
 import EmployeeSearchCard from "@/components/EmployeeSearchCard";
 import type { DirectoryEmployee } from "@/lib/employee-directory";
+import { useT } from "@/lib/i18n";
 
 const OLD_DA_RATE = 0.42;
 const NEW_DA_RATE = 0.46;
@@ -47,6 +48,7 @@ function inr(n: number) {
 }
 
 export default function DAArrears() {
+  const t = useT();
   const [employee, setEmployee] = useState<DirectoryEmployee | null>(null);
   const billMonth = "June 2026";
   const [rows, setRows] = useState<ArrearRow[]>(BASE_ROWS);
@@ -72,15 +74,15 @@ export default function DAArrears() {
 
   function handleReset() {
     setRows(BASE_ROWS);
-    announce("Arrear figures reset.");
+    announce(t("Arrear figures reset."));
   }
 
   function handleCalculate() {
-    announce("DA, CPF, BC, and PT arrears recalculated.");
+    announce(t("DA, CPF, BC, and PT arrears recalculated."));
   }
 
   function handleRefresh() {
-    announce(`Latest processed payroll data fetched for ${employee?.name}.`);
+    announce(`${t("Latest processed payroll data fetched for")} ${employee?.name}.`);
   }
 
   const totals = useMemo(() => {
@@ -108,7 +110,7 @@ export default function DAArrears() {
 
       {/* Employee Selection */}
       <div className="mb-5 rounded-xl border border-border bg-surface p-4 shadow-[0_1px_2px_rgba(22,35,28,0.04)] sm:p-5">
-        <div className="mb-1 text-[12.5px] font-semibold text-ink">Employee Selection</div>
+        <div className="mb-1 text-[12.5px] font-semibold text-ink">{t("Employee Selection")}</div>
         <EmployeeSearchCard employee={employee} onSelect={handleSelectEmployee} required />
 
         {employee && (
@@ -117,8 +119,8 @@ export default function DAArrears() {
               <ReadOnlyStat label="Employee ID" value={employee.id} />
               <ReadOnlyStat label="Employee Name" value={employee.name} />
               <ReadOnlyStat label="Designation" value={employee.designation} />
-              <ReadOnlyStat label="Department" value={employee.department} />
-              <ReadOnlyStat label="Sub Department" value="Accounts Office" />
+              <ReadOnlyStat label="Department" value={t(employee.department)} />
+              <ReadOnlyStat label="Sub Department" value={t("Accounts Office")} />
               <ReadOnlyStat label="Bill Month" value={billMonth} />
             </div>
             <button
@@ -127,7 +129,7 @@ export default function DAArrears() {
               className="flex h-9 flex-shrink-0 items-center gap-1.5 rounded-[9px] border-[1.5px] border-border px-3.5 text-[12.5px] font-semibold text-ink hover:border-muted-2"
             >
               <Icon name="x-circle" className="h-3.5 w-3.5" />
-              Refresh Data
+              {t("Refresh Data")}
             </button>
           </div>
         )}
@@ -138,21 +140,16 @@ export default function DAArrears() {
         <div className="mb-5 grid grid-cols-1 gap-4 lg:grid-cols-[1fr_260px]">
           <div className="flex items-start gap-3 rounded-xl border border-primary/20 bg-primary-tint px-4 py-3.5 text-[13px] text-primary">
             <Icon name="help" className="mt-0.5 h-4 w-4 flex-shrink-0" />
-            <p>
-              Basic Pay, Grade Pay, Gross Pay, and attendance are fetched
-              automatically from processed salary bills for each month below.
-              You can edit any value if a correction is required before
-              calculating arrears.
-            </p>
+            <p>{t("Basic Pay, Grade Pay, Gross Pay, and attendance are fetched automatically from processed salary bills for each month below. You can edit any value if a correction is required before calculating arrears.")}</p>
           </div>
           <div className="rounded-xl border border-border bg-surface px-4 py-3.5">
-            <div className="text-[10.5px] font-semibold tracking-[0.03em] text-muted-2 uppercase">Rate Information</div>
+            <div className="text-[10.5px] font-semibold tracking-[0.03em] text-muted-2 uppercase">{t("Rate Information")}</div>
             <div className="mt-2 flex items-center justify-between text-[13px]">
-              <span className="text-muted">Old DA Rate</span>
+              <span className="text-muted">{t("Old DA Rate")}</span>
               <span className="font-semibold text-ink">{Math.round(OLD_DA_RATE * 100)}%</span>
             </div>
             <div className="mt-1.5 flex items-center justify-between text-[13px]">
-              <span className="text-muted">New DA Rate</span>
+              <span className="text-muted">{t("New DA Rate")}</span>
               <span className="font-semibold text-primary">{Math.round(NEW_DA_RATE * 100)}%</span>
             </div>
           </div>
@@ -184,7 +181,7 @@ export default function DAArrears() {
                   const c = computed(r);
                   return (
                     <tr key={`${r.month}-${r.year}`} className={`transition-colors hover:bg-primary-tint/40 ${i % 2 === 1 ? "bg-canvas/60" : "bg-surface"}`}>
-                      <td className="border-b border-border-soft px-3 py-2 font-semibold whitespace-nowrap text-ink">{r.month}</td>
+                      <td className="border-b border-border-soft px-3 py-2 font-semibold whitespace-nowrap text-ink">{t(r.month)}</td>
                       <td className="border-b border-border-soft px-3 py-2 whitespace-nowrap text-muted">{r.year}</td>
                       <td className="border-b border-border-soft px-3 py-2 text-right whitespace-nowrap text-muted">{r.totalDays}</td>
                       <td className="border-b border-border-soft px-1.5 py-1.5">
@@ -212,7 +209,7 @@ export default function DAArrears() {
               <tfoot>
                 <tr className="border-t-2 border-border bg-border-soft/70 font-semibold">
                   <td colSpan={9} className="px-3 py-2.5 text-right whitespace-nowrap text-ink">
-                    Total
+                    {t("Total")}
                   </td>
                   <td className="px-3 py-2.5 text-right whitespace-nowrap text-primary">{inr(totals.da)}</td>
                   <td className="px-3 py-2.5 text-right whitespace-nowrap text-primary">{inr(totals.cpf)}</td>
@@ -240,22 +237,18 @@ export default function DAArrears() {
             onClick={() => setSummaryOpen((v) => !v)}
             className="flex w-full items-center justify-between px-4 py-3 text-left text-[13px] font-semibold text-ink hover:bg-canvas"
           >
-            Calculation Summary
+            {t("Calculation Summary")}
             <Icon name="chevron" className={`h-4 w-4 transition-transform ${summaryOpen ? "rotate-90" : ""}`} />
           </button>
           {summaryOpen && (
             <div className="border-t border-border-soft px-4 py-3.5 text-[13px] leading-relaxed text-muted">
-              <p>For each month, present days are calculated as Total Days minus Absent Days.</p>
+              <p>{t("For each month, present days are calculated as Total Days minus Absent Days.")}</p>
               <p className="mt-1.5">
-                DA Given = (Basic Pay + Grade Pay) × present-day ratio × Old DA
-                Rate ({Math.round(OLD_DA_RATE * 100)}%). DA Entitlement uses the
-                same formula at the New DA Rate ({Math.round(NEW_DA_RATE * 100)}%).
+                {t("DA Given = (Basic Pay + Grade Pay) × present-day ratio × Old DA Rate")} ({Math.round(OLD_DA_RATE * 100)}%). {t("DA Entitlement uses the same formula at the New DA Rate")} ({Math.round(NEW_DA_RATE * 100)}%).
               </p>
-              <p className="mt-1.5">DA Arrear = DA Entitlement − DA Given.</p>
+              <p className="mt-1.5">{t("DA Arrear = DA Entitlement − DA Given.")}</p>
               <p className="mt-1.5">
-                CPF Arrear, BC Arrear, and PT Arrear are each derived as a
-                percentage of the DA Arrear for that month, then totalled
-                across all months shown above.
+                {t("CPF Arrear, BC Arrear, and PT Arrear are each derived as a percentage of the DA Arrear for that month, then totalled across all months shown above.")}
               </p>
             </div>
           )}
@@ -263,22 +256,22 @@ export default function DAArrears() {
 
         {/* Actions */}
         <div className="mt-6 flex flex-wrap items-center justify-center gap-2.5">
-          <button type="button" onClick={() => announce("Cancelled.")} className="rounded-[9px] border-[1.5px] border-border px-5 py-2.5 text-[13.5px] font-semibold text-ink hover:border-muted-2">
-            Cancel
+          <button type="button" onClick={() => announce(t("Cancelled."))} className="rounded-[9px] border-[1.5px] border-border px-5 py-2.5 text-[13.5px] font-semibold text-ink hover:border-muted-2">
+            {t("Cancel")}
           </button>
           <button type="button" onClick={handleReset} className="rounded-[9px] border-[1.5px] border-border px-5 py-2.5 text-[13.5px] font-semibold text-ink hover:border-muted-2">
-            Reset
+            {t("Reset")}
           </button>
           <button type="button" onClick={handleCalculate} className="rounded-[9px] border-[1.5px] border-primary/40 bg-primary-tint px-5 py-2.5 text-[13.5px] font-semibold text-primary hover:bg-primary-tint/70">
-            Calculate
+            {t("Calculate")}
           </button>
           <button
             type="button"
-            onClick={() => announce("DA arrears saved.")}
+            onClick={() => announce(t("DA arrears saved."))}
             className="flex items-center gap-2 rounded-[9px] bg-accent px-6 py-2.5 text-[13.5px] font-semibold text-white hover:bg-accent-dark"
           >
             <Icon name="bill-create" className="h-4 w-4" />
-            Save
+            {t("Save")}
           </button>
         </div>
       </div>
@@ -289,18 +282,20 @@ export default function DAArrears() {
 }
 
 function ReadOnlyStat({ label, value }: { label: string; value: string }) {
+  const t = useT();
   return (
     <div>
-      <div className="text-[10.5px] font-semibold tracking-[0.03em] text-muted-2 uppercase">{label}</div>
+      <div className="text-[10.5px] font-semibold tracking-[0.03em] text-muted-2 uppercase">{t(label)}</div>
       <div className="mt-0.5 truncate text-[13px] font-medium text-ink">{value}</div>
     </div>
   );
 }
 
 function Th({ children, align, editable }: { children: React.ReactNode; align?: "right"; editable?: boolean }) {
+  const t = useT();
   return (
     <th className={`px-3 py-2.5 text-[10.5px] font-semibold tracking-[0.04em] whitespace-nowrap text-muted uppercase ${align === "right" ? "text-right" : "text-left"} ${editable ? "bg-accent-tint/40 text-accent-dark" : ""}`}>
-      {children}
+      {typeof children === "string" ? t(children) : children}
     </th>
   );
 }
