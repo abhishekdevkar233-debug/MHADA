@@ -8,6 +8,7 @@ import Icon from "@/components/Icon";
 import { Label, Toast } from "@/components/form/Field";
 import { useLang } from "@/lib/i18n";
 import { THEMES, useTheme } from "@/lib/theme";
+import ThemeCustomizerPanel from "@/components/ThemeCustomizerPanel";
 
 type NotificationItem = {
   id: string;
@@ -162,8 +163,9 @@ export default function Topbar({ onMenuOpen }: TopbarProps) {
 }
 
 function ThemeSwitcher() {
-  const { theme, setTheme } = useTheme();
+  const { theme, setTheme, customColors } = useTheme();
   const [open, setOpen] = useState(false);
+  const [customizerOpen, setCustomizerOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -234,8 +236,37 @@ function ThemeSwitcher() {
               </button>
             );
           })}
+
+          <div className="my-1.5 border-t border-border-soft" />
+
+          <button
+            type="button"
+            onClick={() => {
+              setOpen(false);
+              setCustomizerOpen(true);
+            }}
+            className={`flex w-full items-center gap-2.5 rounded-[8px] px-2.5 py-2 text-left transition-colors ${
+              theme === "custom" ? "bg-primary-tint" : "hover:bg-canvas"
+            }`}
+          >
+            <span className="flex flex-shrink-0 items-center -space-x-1.5">
+              {[customColors.primary, customColors.secondary, customColors.accent1].map((c, i) => (
+                <span key={i} className="h-4 w-4 rounded-full border border-white/80 shadow-sm" style={{ backgroundColor: c }} />
+              ))}
+            </span>
+            <span className={`flex-1 text-[12.5px] font-medium ${theme === "custom" ? "text-primary" : "text-ink"}`}>
+              Theme 05 · Custom Theme…
+            </span>
+            {theme === "custom" ? (
+              <Icon name="check" className="h-4 w-4 flex-shrink-0 text-primary" />
+            ) : (
+              <Icon name="chevron" className="h-3.5 w-3.5 flex-shrink-0 text-muted-2" />
+            )}
+          </button>
         </div>
       </div>
+
+      {customizerOpen && <ThemeCustomizerPanel onClose={() => setCustomizerOpen(false)} />}
     </div>
   );
 }
