@@ -53,18 +53,23 @@ export default function DataTablePagination({
       <div className="flex items-center gap-3">
         <div className="flex items-center gap-1.5 text-[12.5px] text-muted">
           Rows per page
-          <select
-            value={rowsPerPage}
-            onChange={(e) => onRowsPerPageChange(Number(e.target.value))}
-            aria-label="Rows Per Page"
-            className="h-8 rounded-[7px] border-[1.5px] border-border bg-white px-2 text-[12.5px] text-ink focus:border-primary focus:outline-none"
-          >
-            {rowsPerPageOptions.map((n) => (
-              <option key={n} value={n}>
-                {n}
-              </option>
-            ))}
-          </select>
+          <div className="relative">
+            <select
+              value={rowsPerPage}
+              onChange={(e) => onRowsPerPageChange(Number(e.target.value))}
+              aria-label="Rows Per Page"
+              className="h-8 appearance-none rounded-[7px] border-[1.5px] border-border bg-white py-0 pr-6 pl-2 text-[12.5px] text-ink focus:border-primary focus:outline-none"
+            >
+              {rowsPerPageOptions.map((n) => (
+                <option key={n} value={n}>
+                  {n}
+                </option>
+              ))}
+            </select>
+            <span className="pointer-events-none absolute inset-y-0 right-1.5 flex items-center text-muted-2">
+              <Icon name="chevron" className="h-3 w-3 rotate-90" />
+            </span>
+          </div>
         </div>
 
         <div className="flex items-center gap-1">

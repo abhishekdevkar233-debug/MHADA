@@ -2,48 +2,25 @@
 
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useId, useRef, useState } from "react";
-import CircularProgress from "@mui/material/CircularProgress";
+import { useId, useState } from "react";
 import Icon from "@/components/Icon";
 
-type FieldErrors = { username?: string; password?: string };
-
+/**
+ * UI prototype only — no real authentication. Any email/password (or none
+ * at all) navigates straight to the dashboard.
+ */
 export default function LoginPage() {
   const router = useRouter();
-  const usernameId = useId();
+  const emailId = useId();
   const passwordId = useId();
-  const usernameErrId = useId();
-  const passwordErrId = useId();
 
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [errors, setErrors] = useState<FieldErrors>({});
-  const [submitting, setSubmitting] = useState(false);
-  const [toast, setToast] = useState<string | null>(null);
-  const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  function announce(message: string) {
-    setToast(message);
-    if (toastTimer.current) clearTimeout(toastTimer.current);
-    toastTimer.current = setTimeout(() => setToast(null), 3200);
-  }
-
-  function validate(): boolean {
-    const next: FieldErrors = {};
-    if (!username.trim()) next.username = "Enter your user name to continue.";
-    if (!password) next.password = "Enter your password to continue.";
-    setErrors(next);
-    return Object.keys(next).length === 0;
-  }
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!validate() || submitting) return;
-    setSubmitting(true);
-    window.setTimeout(() => {
-      router.push("/dashboard");
-    }, 700);
+    router.push("/dashboard");
   }
 
   return (
@@ -105,27 +82,20 @@ export default function LoginPage() {
           <form noValidate onSubmit={handleSubmit}>
             <div className="mb-[18px]">
               <label
-                htmlFor={usernameId}
+                htmlFor={emailId}
                 className="mb-1.5 block text-[12.5px] font-semibold text-ink"
               >
-                User Name
+                Email
               </label>
               <input
-                id={usernameId}
-                type="text"
-                autoComplete="username"
-                placeholder="e.g. mumbai_payroll"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                aria-invalid={Boolean(errors.username)}
-                aria-describedby={errors.username ? usernameErrId : undefined}
+                id={emailId}
+                type="email"
+                autoComplete="email"
+                placeholder="you@mhada.gov.in"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 className="w-full rounded-[9px] border-[1.5px] border-border bg-white px-[13px] py-[11px] text-[14.5px] text-ink outline-none transition-colors focus:border-primary"
               />
-              {errors.username && (
-                <p id={usernameErrId} className="mt-1.5 text-[12px] font-medium text-danger">
-                  {errors.username}
-                </p>
-              )}
             </div>
 
             <div className="mb-[18px]">
@@ -143,8 +113,6 @@ export default function LoginPage() {
                   placeholder="••••••••"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  aria-invalid={Boolean(errors.password)}
-                  aria-describedby={errors.password ? passwordErrId : undefined}
                   className="w-full rounded-[9px] border-[1.5px] border-border bg-white px-[13px] py-[11px] pr-11 text-[14.5px] text-ink outline-none transition-colors focus:border-primary"
                 />
                 <button
@@ -157,28 +125,18 @@ export default function LoginPage() {
                   <Icon name={showPassword ? "eye-off" : "eye"} className="h-[18px] w-[18px]" />
                 </button>
               </div>
-              {errors.password && (
-                <p id={passwordErrId} className="mt-1.5 text-[12px] font-medium text-danger">
-                  {errors.password}
-                </p>
-              )}
             </div>
 
             <button
               type="submit"
-              disabled={submitting}
-              className="mt-1.5 flex w-full items-center justify-center gap-2 rounded-[9px] bg-primary px-5 py-[11px] text-[14px] font-semibold text-white transition-colors hover:bg-primary-dark disabled:cursor-not-allowed disabled:opacity-80"
+              className="mt-1.5 flex w-full items-center justify-center gap-2 rounded-[9px] bg-primary px-5 py-[11px] text-[14px] font-semibold text-white transition-colors hover:bg-primary-dark"
             >
-              {submitting && <CircularProgress size={16} thickness={5} sx={{ color: "inherit" }} />}
-              {submitting ? "Signing in…" : "Log In"}
+              Log In
             </button>
           </form>
 
           <button
             type="button"
-            onClick={() =>
-              announce("Password reset link sent to your registered email.")
-            }
             className="mt-4 block w-full text-center text-[13px] font-semibold text-primary hover:text-primary-dark"
           >
             Forgot Password?
@@ -188,19 +146,6 @@ export default function LoginPage() {
             For support, contact payroll.erp@mhada.gov.in
           </div>
         </div>
-      </div>
-
-      <div
-        role="status"
-        aria-live="polite"
-        className={`fixed bottom-6 left-1/2 z-50 flex -translate-x-1/2 items-center gap-2.5 rounded-xl bg-ink px-[22px] py-[13px] text-[13.5px] font-medium text-white shadow-[0_12px_30px_rgba(0,0,0,0.25)] transition-all duration-300 ${
-          toast
-            ? "translate-y-0 opacity-100"
-            : "pointer-events-none translate-y-5 opacity-0"
-        }`}
-      >
-        <span className="h-2 w-2 flex-shrink-0 rounded-full bg-accent" aria-hidden="true" />
-        <span>{toast}</span>
       </div>
     </div>
   );

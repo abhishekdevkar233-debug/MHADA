@@ -194,13 +194,13 @@ function StatCard({
         ? "bg-warning-tint text-warning"
         : "bg-primary-tint text-primary";
   return (
-    <div className="flex items-center gap-3 rounded-xl border border-border bg-surface px-4 py-3.5">
-      <span className={`flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl ${toneCls}`}>
-        <Icon name={icon} className="h-5 w-5" />
+    <div className="flex items-center gap-3.5 rounded-xl border border-border bg-surface px-5 py-5">
+      <span className={`flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl ${toneCls}`}>
+        <Icon name={icon} className="h-6 w-6" />
       </span>
       <div>
-        <div className="disp text-[20px] leading-none font-semibold text-ink">{value}</div>
-        <div className="mt-1 text-[11.5px] font-medium text-muted">{label}</div>
+        <div className="disp text-[22px] leading-none font-semibold text-ink">{value}</div>
+        <div className="mt-1.5 text-[12px] font-medium text-muted">{label}</div>
       </div>
     </div>
   );
@@ -279,30 +279,40 @@ function ListView({
             />
           </div>
 
-          <select
-            value={department}
-            onChange={(e) => updateFilter(() => setDepartment(e.target.value))}
-            aria-label="Department Filter"
-            className="h-9.5 rounded-[9px] border-[1.5px] border-border bg-white px-3 text-[13px] text-ink focus:border-primary focus:outline-none"
-          >
-            <option value="All">All Departments</option>
-            {DEPARTMENTS.map((d) => (
-              <option key={d}>{d}</option>
-            ))}
-          </select>
+          <div className="relative">
+            <select
+              value={department}
+              onChange={(e) => updateFilter(() => setDepartment(e.target.value))}
+              aria-label="Department Filter"
+              className="h-9.5 w-full appearance-none rounded-[9px] border-[1.5px] border-border bg-white px-3 pr-9 text-[13px] text-ink focus:border-primary focus:outline-none"
+            >
+              <option value="All">All Departments</option>
+              {DEPARTMENTS.map((d) => (
+                <option key={d}>{d}</option>
+              ))}
+            </select>
+            <span className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-muted-2">
+              <Icon name="chevron" className="h-3.5 w-3.5 rotate-90" />
+            </span>
+          </div>
 
-          <select
-            value={status}
-            onChange={(e) => updateFilter(() => setStatus(e.target.value as typeof status))}
-            aria-label="Status Filter"
-            className="h-9.5 rounded-[9px] border-[1.5px] border-border bg-white px-3 text-[13px] text-ink focus:border-primary focus:outline-none"
-          >
-            {STATUS_OPTIONS.map((s) => (
-              <option key={s} value={s}>
-                {s === "All" ? "All Statuses" : s === "FilledUp" ? "Filled Up" : "Pending"}
-              </option>
-            ))}
-          </select>
+          <div className="relative">
+            <select
+              value={status}
+              onChange={(e) => updateFilter(() => setStatus(e.target.value as typeof status))}
+              aria-label="Status Filter"
+              className="h-9.5 w-full appearance-none rounded-[9px] border-[1.5px] border-border bg-white px-3 pr-9 text-[13px] text-ink focus:border-primary focus:outline-none"
+            >
+              {STATUS_OPTIONS.map((s) => (
+                <option key={s} value={s}>
+                  {s === "All" ? "All Statuses" : s === "FilledUp" ? "Filled Up" : "Pending"}
+                </option>
+              ))}
+            </select>
+            <span className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-muted-2">
+              <Icon name="chevron" className="h-3.5 w-3.5 rotate-90" />
+            </span>
+          </div>
 
           <button
             type="button"
@@ -400,21 +410,26 @@ function ListView({
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-1.5 text-[12.5px] text-muted">
               Rows per page
-              <select
-                value={rowsPerPage}
-                onChange={(e) => {
-                  setRowsPerPage(Number(e.target.value));
-                  setPage(1);
-                }}
-                aria-label="Rows Per Page"
-                className="h-8 rounded-[7px] border-[1.5px] border-border bg-white px-2 text-[12.5px] text-ink focus:border-primary focus:outline-none"
-              >
-                {ROWS_PER_PAGE_OPTIONS.map((n) => (
-                  <option key={n} value={n}>
-                    {n}
-                  </option>
-                ))}
-              </select>
+              <div className="relative">
+                <select
+                  value={rowsPerPage}
+                  onChange={(e) => {
+                    setRowsPerPage(Number(e.target.value));
+                    setPage(1);
+                  }}
+                  aria-label="Rows Per Page"
+                  className="h-8 appearance-none rounded-[7px] border-[1.5px] border-border bg-white py-0 pr-6 pl-2 text-[12.5px] text-ink focus:border-primary focus:outline-none"
+                >
+                  {ROWS_PER_PAGE_OPTIONS.map((n) => (
+                    <option key={n} value={n}>
+                      {n}
+                    </option>
+                  ))}
+                </select>
+                <span className="pointer-events-none absolute inset-y-0 right-1.5 flex items-center text-muted-2">
+                  <Icon name="chevron" className="h-3 w-3 rotate-90" />
+                </span>
+              </div>
             </div>
 
             <div className="flex items-center gap-1">
