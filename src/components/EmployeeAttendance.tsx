@@ -161,33 +161,34 @@ export default function EmployeeAttendance() {
 
       {/* Payroll Period */}
       <div className="mb-5 rounded-xl border border-border bg-surface p-4 shadow-[0_1px_2px_rgba(22,35,28,0.04)] sm:p-5">
-        <div className="grid grid-cols-1 gap-5 lg:grid-cols-[auto_1fr_auto]">
-          <div className="grid grid-cols-2 gap-3 sm:w-72">
+        <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
+          <div className="grid grid-cols-2 gap-3 sm:w-72 lg:flex-shrink-0">
             <FilterSelect label="Month" value={month} onChange={setMonth} options={MONTHS} />
             <FilterSelect label="Year" value={year} onChange={setYear} options={YEARS} />
           </div>
 
-          <div className="grid grid-cols-2 gap-x-6 gap-y-2 border-x border-border-soft px-5 text-[12.5px] sm:grid-cols-3 lg:border-y-0">
+          <div className="flex flex-wrap items-center gap-x-6 gap-y-2 border-y border-border-soft py-4 text-[12.5px] lg:flex-1 lg:justify-center lg:border-x lg:border-y-0 lg:px-6 lg:py-0">
             <BiometricStat label="Last Sync Time" value="2026-07-18 06:00 AM" />
             <BiometricStat label="Imported Records" value={`${summary.total}`} />
             <BiometricStat label="Pending Review Count" value={String(summary.needReview)} />
           </div>
 
-          <div className="flex flex-col justify-center gap-2 lg:w-56">
+          <div className="flex flex-col gap-2 sm:flex-row lg:flex-shrink-0">
             <button
               type="button"
               onClick={() => announce("Biometric attendance import started.")}
-              className="flex items-center justify-center gap-2 rounded-[8px] bg-primary px-4 py-2.5 text-[13px] font-semibold text-white hover:bg-primary-dark"
+              className="flex items-center justify-center gap-2 rounded-[8px] bg-primary px-4 py-2.5 text-[13px] font-semibold whitespace-nowrap text-white transition-colors hover:bg-primary-dark"
             >
               <Icon name="attendance" className="h-4 w-4" />
-              Import Biometric Attendance
+              Import Attendance
             </button>
             <button
               type="button"
               onClick={() => announce("Import history isn't available in this preview.")}
-              className="rounded-[8px] border-[1.5px] border-border px-4 py-2 text-[13px] font-semibold text-ink hover:border-muted-2"
+              className="flex items-center justify-center gap-2 rounded-[8px] border-[1.5px] border-border px-4 py-2.5 text-[13px] font-semibold whitespace-nowrap text-ink transition-colors hover:border-muted-2"
             >
-              View Import History
+              <Icon name="bill-report" className="h-4 w-4" />
+              Import History
             </button>
           </div>
         </div>

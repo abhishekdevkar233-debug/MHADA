@@ -107,7 +107,7 @@ export default function LoginPage() {
         className="pointer-events-none absolute inset-0"
         style={{
           background:
-            "radial-gradient(circle at 15% 20%, rgba(226,112,58,0.12), transparent 40%), radial-gradient(circle at 85% 80%, rgba(15,92,76,0.20), transparent 45%)",
+            "radial-gradient(circle at 15% 20%, rgba(46,109,164,0.16), transparent 40%), radial-gradient(circle at 85% 80%, rgba(13,49,87,0.30), transparent 45%)",
         }}
       />
 
@@ -119,7 +119,7 @@ export default function LoginPage() {
             className="pointer-events-none absolute -bottom-16 -right-16 h-56 w-56 rounded-full"
             style={{
               background:
-                "radial-gradient(circle, rgba(226,112,58,0.35), transparent 70%)",
+                "radial-gradient(circle, rgba(255,255,255,0.18), transparent 70%)",
             }}
           />
           <div className="relative">

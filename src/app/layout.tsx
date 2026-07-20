@@ -43,7 +43,7 @@ export default function RootLayout({
       lang="en"
       className={`${poppins.variable} ${inter.variable} ${plexMono.variable} ${notoDevanagari.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-canvas font-sans text-ink">
+      <body className="h-full flex flex-col overflow-hidden bg-canvas font-sans text-ink">
         <LangProvider>{children}</LangProvider>
       </body>
     </html>

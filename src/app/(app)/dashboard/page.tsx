@@ -2,9 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { NAV } from "@/lib/nav";
 import Icon from "@/components/Icon";
-import { useLang } from "@/lib/i18n";
 import { EMPLOYEE_DIRECTORY } from "@/lib/employee-directory";
 
 /* ---------------- Mock summary data (client-side only, no backend) ---------------- */
@@ -147,17 +145,12 @@ function greeting() {
 }
 
 export default function DashboardPage() {
-  const { lang } = useLang();
   const [now, setNow] = useState(() => new Date());
 
   useEffect(() => {
     const id = setInterval(() => setNow(new Date()), 60000);
     return () => clearInterval(id);
   }, []);
-
-  const visibleMenus = NAV.filter(
-    (menu) => menu.key !== "dashboard" && !menu.hidden && (menu.children.length === 0 || menu.children.some((c) => !c.hidden)),
-  );
 
   return (
     <div className="mx-auto max-w-7xl">
@@ -338,33 +331,6 @@ export default function DashboardPage() {
           </div>
         ))}
       </div>
-
-      {/* All modules */}
-      <SectionHeading icon="dashboard" title="All Modules" />
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {visibleMenus.map((menu) => {
-          const visible = menu.children.filter((c) => !c.hidden);
-          const href = visible[0]?.href ?? `/${menu.key}`;
-          const count = visible.length;
-          return (
-            <Link
-              key={menu.key}
-              href={href}
-              className="group flex flex-col rounded-xl border border-border bg-surface p-4 transition-all hover:-translate-y-0.5 hover:shadow-[0_8px_24px_-12px_rgba(22,35,28,0.18)]"
-            >
-              <span className="flex h-11 w-11 items-center justify-center rounded-[10px] bg-primary-tint text-primary transition-colors group-hover:bg-primary group-hover:text-white">
-                <Icon name={menu.icon} className="h-5 w-5" />
-              </span>
-              <div className={`mt-3 text-[14px] font-semibold text-ink ${lang === "mr" ? "dv" : ""}`}>
-                {lang === "mr" ? menu.dv : menu.label}
-              </div>
-              <div className="mt-1 text-[11.5px] text-muted-2">
-                {count > 0 ? `${count} ${count === 1 ? "screen" : "screens"}` : "Coming soon"}
-              </div>
-            </Link>
-          );
-        })}
-      </div>
     </div>
   );
 }
@@ -433,40 +399,95 @@ function ChartCard({ title, subtitle, children }: { title: string; subtitle: str
   );
 }
 
+function ChartTooltip({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="pointer-events-none absolute bottom-full left-1/2 z-10 mb-2 w-max -translate-x-1/2 rounded-[8px] bg-ink px-3 py-2 text-[11.5px] leading-snug text-white shadow-[0_12px_30px_rgba(0,0,0,0.25)]">
+      {children}
+      <span className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-ink" />
+    </div>
+  );
+}
+
 function BillsBarChart() {
   const [ready, setReady] = useState(false);
+  const [hover, setHover] = useState<number | null>(null);
   useEffect(() => {
     const t = setTimeout(() => setReady(true), 50);
     return () => clearTimeout(t);
   }, []);
   const max = Math.max(...MONTHLY_BILLS.map((m) => m.generated));
+
+  // Line overlay tracking the processing rate (%), plotted across the chart width.
+  const linePoints = MONTHLY_BILLS.map((m, i) => {
+    const x = (i / (MONTHLY_BILLS.length - 1)) * 100;
+    const rate = m.processed / m.generated;
+    const y = 100 - rate * 100;
+    return { x, y };
+  });
+  const linePath = linePoints.map((p, i) => `${i === 0 ? "M" : "L"} ${p.x} ${p.y}`).join(" ");
+
   return (
     <div>
-      <div className="flex h-32 items-end gap-3">
-        {MONTHLY_BILLS.map((m) => (
-          <div key={m.month} className="flex flex-1 flex-col items-center gap-1">
+      <div className="relative flex h-36 items-end gap-3">
+        <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="pointer-events-none absolute inset-0 h-full w-full overflow-visible">
+          <path
+            d={linePath}
+            fill="none"
+            stroke="var(--accent-dark)"
+            strokeWidth="1.5"
+            vectorEffect="non-scaling-stroke"
+            strokeDasharray={200}
+            strokeDashoffset={ready ? 0 : 200}
+            className="transition-[stroke-dashoffset] duration-[900ms] ease-out"
+          />
+          {ready &&
+            linePoints.map((p, i) => (
+              <circle key={i} cx={p.x} cy={p.y} r="1.6" fill="var(--accent-dark)" vectorEffect="non-scaling-stroke" />
+            ))}
+        </svg>
+
+        {MONTHLY_BILLS.map((m, i) => (
+          <div
+            key={m.month}
+            className="relative flex h-full flex-1 flex-col items-center justify-end gap-1"
+            onMouseEnter={() => setHover(i)}
+            onMouseLeave={() => setHover((v) => (v === i ? null : v))}
+          >
+            {hover === i && (
+              <ChartTooltip>
+                <div className="font-semibold">{m.month} 2026</div>
+                <div className="mt-1 flex items-center gap-1.5">
+                  <span className="h-1.5 w-1.5 rounded-full bg-primary-tint" /> Generated: {m.generated}
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <span className="h-1.5 w-1.5 rounded-full bg-primary" /> Processed: {m.processed}
+                </div>
+                <div className="mt-1 text-white/70">{Math.round((m.processed / m.generated) * 100)}% processed</div>
+              </ChartTooltip>
+            )}
             <div className="flex h-full w-full items-end gap-0.5">
               <div
-                className="flex-1 rounded-t-[4px] bg-primary-tint transition-all duration-700 ease-out"
+                className={`flex-1 rounded-t-[4px] transition-all duration-700 ease-out ${hover === i ? "bg-primary-tint/80" : "bg-primary-tint"}`}
                 style={{ height: ready ? `${(m.generated / max) * 100}%` : "0%" }}
-                title={`Generated: ${m.generated}`}
               />
               <div
-                className="flex-1 rounded-t-[4px] bg-primary transition-all duration-700 ease-out"
+                className={`flex-1 rounded-t-[4px] transition-all duration-700 ease-out ${hover === i ? "bg-primary-dark" : "bg-primary"}`}
                 style={{ height: ready ? `${(m.processed / max) * 100}%` : "0%", transitionDelay: "80ms" }}
-                title={`Processed: ${m.processed}`}
               />
             </div>
-            <span className="text-[10.5px] text-muted-2">{m.month}</span>
+            <span className={`text-[10.5px] transition-colors ${hover === i ? "font-semibold text-ink" : "text-muted-2"}`}>{m.month}</span>
           </div>
         ))}
       </div>
-      <div className="mt-3 flex items-center gap-4 text-[11px] text-muted">
+      <div className="mt-3 flex flex-wrap items-center gap-4 text-[11px] text-muted">
         <span className="flex items-center gap-1.5">
           <span className="h-2 w-2 rounded-full bg-primary-tint" /> Generated
         </span>
         <span className="flex items-center gap-1.5">
           <span className="h-2 w-2 rounded-full bg-primary" /> Processed
+        </span>
+        <span className="flex items-center gap-1.5">
+          <span className="h-2 w-2 rounded-full bg-accent-dark" /> Processing rate
         </span>
       </div>
     </div>
@@ -474,6 +495,12 @@ function BillsBarChart() {
 }
 
 function LeaveStatsChart() {
+  const [ready, setReady] = useState(false);
+  const [hover, setHover] = useState<number | null>(null);
+  useEffect(() => {
+    const t = setTimeout(() => setReady(true), 50);
+    return () => clearTimeout(t);
+  }, []);
   const total = LEAVE_STATS.reduce((s, l) => s + l.count, 0);
   const toneCls: Record<string, string> = {
     primary: "bg-primary",
@@ -483,19 +510,47 @@ function LeaveStatsChart() {
   };
   return (
     <div>
-      <div className="flex h-2.5 w-full overflow-hidden rounded-full bg-border-soft">
-        {LEAVE_STATS.map((l) => (
-          <div key={l.type} className={`h-full ${toneCls[l.tone]}`} style={{ width: `${(l.count / total) * 100}%` }} />
-        ))}
+      <div className="relative flex h-6 w-full overflow-visible rounded-full bg-border-soft">
+        <div className="flex h-full w-full overflow-hidden rounded-full">
+          {LEAVE_STATS.map((l, i) => (
+            <div
+              key={l.type}
+              onMouseEnter={() => setHover(i)}
+              onMouseLeave={() => setHover((v) => (v === i ? null : v))}
+              className={`relative h-full cursor-pointer transition-all duration-700 ease-out ${toneCls[l.tone]} ${
+                hover === i ? "opacity-100" : hover === null ? "opacity-100" : "opacity-50"
+              }`}
+              style={{ width: ready ? `${(l.count / total) * 100}%` : "0%" }}
+            >
+              {hover === i && (
+                <ChartTooltip>
+                  <div className="font-semibold">{l.type}</div>
+                  <div className="text-white/80">
+                    {l.count} days · {Math.round((l.count / total) * 100)}%
+                  </div>
+                </ChartTooltip>
+              )}
+            </div>
+          ))}
+        </div>
       </div>
       <div className="mt-3 space-y-2">
-        {LEAVE_STATS.map((l) => (
-          <div key={l.type} className="flex items-center justify-between text-[12px]">
+        {LEAVE_STATS.map((l, i) => (
+          <div
+            key={l.type}
+            onMouseEnter={() => setHover(i)}
+            onMouseLeave={() => setHover((v) => (v === i ? null : v))}
+            className={`flex items-center justify-between rounded-[6px] px-1.5 py-1 text-[12px] transition-colors ${
+              hover === i ? "bg-canvas" : ""
+            }`}
+          >
             <span className="flex items-center gap-1.5 text-ink">
               <span className={`h-2 w-2 rounded-full ${toneCls[l.tone]}`} />
               {l.type}
             </span>
-            <span className="font-medium text-muted-2">{l.count}</span>
+            <span className="font-medium text-muted-2">
+              {l.count} <span className="text-muted-2/70">({Math.round((l.count / total) * 100)}%)</span>
+            </span>
           </div>
         ))}
       </div>
@@ -504,6 +559,12 @@ function LeaveStatsChart() {
 }
 
 function AttendanceDonut() {
+  const [ready, setReady] = useState(false);
+  const [hover, setHover] = useState<number | null>(null);
+  useEffect(() => {
+    const t = setTimeout(() => setReady(true), 50);
+    return () => clearTimeout(t);
+  }, []);
   const radius = 42;
   const circumference = 2 * Math.PI * radius;
   const toneStroke: Record<string, string> = {
@@ -511,38 +572,53 @@ function AttendanceDonut() {
     warning: "var(--warning)",
     danger: "var(--danger)",
   };
-  const segments = ATTENDANCE_SUMMARY.reduce<{ label: string; tone: string; dash: number; offset: number }[]>((acc, s) => {
+  const segments = ATTENDANCE_SUMMARY.reduce<{ label: string; pct: number; tone: string; dash: number; offset: number }[]>((acc, s) => {
     const dash = (s.pct / 100) * circumference;
     const offset = acc.length > 0 ? acc[acc.length - 1].offset + acc[acc.length - 1].dash : 0;
-    acc.push({ label: s.label, tone: s.tone, dash, offset });
+    acc.push({ label: s.label, pct: s.pct, tone: s.tone, dash, offset });
     return acc;
   }, []);
+  const primary = ATTENDANCE_SUMMARY[0];
+
   return (
     <div className="flex items-center gap-4">
-      <svg viewBox="0 0 100 100" className="h-28 w-28 flex-shrink-0 -rotate-90">
-        <circle cx="50" cy="50" r={radius} fill="none" stroke="var(--border-soft)" strokeWidth="10" />
-        {segments.map((s) => (
-          <circle
-            key={s.label}
-            cx="50"
-            cy="50"
-            r={radius}
-            fill="none"
-            stroke={toneStroke[s.tone]}
-            strokeWidth="10"
-            strokeDasharray={`${s.dash} ${circumference - s.dash}`}
-            strokeDashoffset={-s.offset}
-            strokeLinecap="round"
-            className="transition-all duration-700 ease-out"
-          />
-        ))}
-      </svg>
-      <div className="space-y-2">
-        {ATTENDANCE_SUMMARY.map((s) => (
-          <div key={s.label} className="flex items-center gap-2 text-[12px]">
-            <span
-              className={`h-2 w-2 rounded-full ${s.tone === "success" ? "bg-success" : s.tone === "warning" ? "bg-warning" : "bg-danger"}`}
+      <div className="relative h-28 w-28 flex-shrink-0">
+        <svg viewBox="0 0 100 100" className="h-full w-full -rotate-90">
+          <circle cx="50" cy="50" r={radius} fill="none" stroke="var(--border-soft)" strokeWidth="10" />
+          {segments.map((s, i) => (
+            <circle
+              key={s.label}
+              cx="50"
+              cy="50"
+              r={radius}
+              fill="none"
+              stroke={toneStroke[s.tone]}
+              strokeWidth={hover === i ? "13" : "10"}
+              strokeDasharray={`${ready ? s.dash : 0} ${circumference}`}
+              strokeDashoffset={-s.offset}
+              strokeLinecap="round"
+              onMouseEnter={() => setHover(i)}
+              onMouseLeave={() => setHover((v) => (v === i ? null : v))}
+              className="cursor-pointer transition-all duration-700 ease-out"
             />
+          ))}
+        </svg>
+        <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center">
+          <span className="disp text-[22px] font-bold text-ink">
+            {hover !== null ? ATTENDANCE_SUMMARY[hover].pct : primary.pct}%
+          </span>
+          <span className="text-[10px] text-muted-2">{hover !== null ? ATTENDANCE_SUMMARY[hover].label : primary.label}</span>
+        </div>
+      </div>
+      <div className="space-y-2">
+        {ATTENDANCE_SUMMARY.map((s, i) => (
+          <div
+            key={s.label}
+            onMouseEnter={() => setHover(i)}
+            onMouseLeave={() => setHover((v) => (v === i ? null : v))}
+            className={`flex items-center gap-2 rounded-[6px] px-1.5 py-1 text-[12px] transition-colors ${hover === i ? "bg-canvas" : ""}`}
+          >
+            <span className={`h-2 w-2 rounded-full ${s.tone === "success" ? "bg-success" : s.tone === "warning" ? "bg-warning" : "bg-danger"}`} />
             <span className="text-ink">{s.label}</span>
             <span className="font-semibold text-muted-2">{s.pct}%</span>
           </div>
