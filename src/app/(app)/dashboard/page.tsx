@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import Icon from "@/components/Icon";
 import { EMPLOYEE_DIRECTORY } from "@/lib/employee-directory";
 
@@ -133,19 +134,31 @@ export default function DashboardPage() {
   return (
     <div className="mx-auto max-w-7xl">
       {/* Welcome */}
-      <div className="animate-fade-in-up relative mb-6 overflow-hidden rounded-xl border border-border bg-primary p-6 text-white sm:p-7">
-        <div
+      <div className="animate-fade-in-up relative mb-6 rounded-xl border border-border bg-primary p-6 text-white sm:p-7">
+        <div className="pointer-events-none absolute inset-0 overflow-hidden rounded-xl" aria-hidden="true">
+          <div
+            className="absolute -top-10 -right-10 h-56 w-56 rounded-full"
+            style={{ background: "radial-gradient(circle, rgba(255,255,255,0.12), transparent 70%)" }}
+          />
+          <div
+            className="absolute -bottom-16 right-24 h-40 w-40 rounded-full"
+            style={{ background: "radial-gradient(circle, rgba(255,255,255,0.08), transparent 70%)" }}
+          />
+        </div>
+
+        <Image
+          src="/mhada-building.png"
+          alt=""
           aria-hidden="true"
-          className="pointer-events-none absolute -top-10 -right-10 h-56 w-56 rounded-full"
-          style={{ background: "radial-gradient(circle, rgba(255,255,255,0.12), transparent 70%)" }}
+          width={1536}
+          height={1024}
+          sizes="(min-width: 1280px) 420px, (min-width: 640px) 320px, 0px"
+          priority
+          className="pointer-events-none absolute right-4 bottom-0 hidden h-[calc(100%+1.75rem)] w-auto max-w-[42%] object-contain object-bottom sm:block md:right-8"
         />
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute -bottom-16 right-24 h-40 w-40 rounded-full"
-          style={{ background: "radial-gradient(circle, rgba(255,255,255,0.08), transparent 70%)" }}
-        />
+
         <div className="relative flex flex-wrap items-end justify-between gap-4">
-          <div>
+          <div className="max-w-[60%] sm:max-w-[55%]">
             <div className="text-[12px] font-medium text-white/70">{greeting()}</div>
             <h1 className="disp mt-1 text-[22px] font-semibold sm:text-[24px]">Welcome, Mumbai Division</h1>
             <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-[12.5px] text-white/80">
@@ -159,9 +172,6 @@ export default function DashboardPage() {
               </span>
             </div>
           </div>
-          <span className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-2xl bg-white/15">
-            <Icon name="dashboard" className="h-7 w-7" />
-          </span>
         </div>
       </div>
 
